@@ -4,6 +4,10 @@ A single-page web app for selecting elevation tiles on a map and downloading the
 GeoTIFF, across six free global DEMs. No build step, no backend, no API keys —
 `index.html` is the whole application.
 
+By **Sharad Gupta** — [github.com/sharadgupta27](https://github.com/sharadgupta27) ·
+[linkedin.com/in/sharadgupta27](https://www.linkedin.com/in/sharadgupta27/) ·
+[sharadgupta27@gmail.com](mailto:sharadgupta27@gmail.com)
+
 ## Datasets
 
 All tiles come from the [OpenTopography](https://opentopography.org) public S3 mirror,
@@ -40,7 +44,26 @@ To keep users from selecting empty water, the map draws its grid only over 1°×
 that actually have a tile, and clicks/box-selections over ocean are ignored. This is driven
 by a compact bitmask (`LAND_MASK_B64` in `index.html`, ~8 KB) built from the union of the
 SRTM GL1 and Copernicus GLO-90 tile listings on the mirror — 26,481 land cells worldwide.
-It is a static snapshot; regenerate it if the mirror's coverage ever changes.
+It is a static snapshot; regenerate it if the mirror's coverage ever changes
+(`scripts/build_land_mask.py`).
+
+### India boundary
+
+India's boundary is corrected in two independent places:
+
+**1. On the basemap (what you see).** The CARTO/OSM raster basemaps draw India along the
+de-facto line. The [india_boundary_corrector](https://github.com/ramSeraph/india_boundary_corrector)
+library (loaded from jsDelivr, `L.tileLayer.indiaBoundaryCorrected`) rewrites those tiles
+on the fly — masking the incorrect boundary and drawing India's official one from a bundled
+PMTiles dataset. If that CDN script fails to load, the app falls back to plain tiles.
+
+**2. In tile selection (what you download).** Searching **India** uses an embedded official
+boundary (`INDIA_BOUNDARY` in `index.html`) rather than the Nominatim result, so the
+selected DEM tiles cover all of Jammu & Kashmir, Pakistan-administered Kashmir (with
+Gilgit-Baltistan), Aksai Chin, the Siachen region and Arunachal Pradesh. Selection samples
+a 3×3 grid within each 1° cell, so border cells are captured even when their centre falls
+just across a neighbouring country's line. Source: DataMeet Community Maps (Survey of India
+composite), simplified; regenerate with `scripts/build_india_boundary.py`.
 
 ## Downloading
 
@@ -62,7 +85,6 @@ gdal_merge.py -o srtm_merged.tif srtm_data/*.tif
 
 ## Attribution
 
-
 * **SRTM** — NASA JPL (2013), *SRTM Global 1 arc second*,
   [doi:10.5067/MEaSUREs/SRTM/SRTMGL1.003](https://doi.org/10.5067/MEaSUREs/SRTM/SRTMGL1.003)
 * **NASADEM** — NASA JPL (2020), NASADEM_HGT v001
@@ -70,3 +92,11 @@ gdal_merge.py -o srtm_merged.tif srtm_data/*.tif
 * **Copernicus GLO-30 / GLO-90** — © ESA / Airbus, produced from TanDEM-X
 
 All redistributed by OpenTopography. Basemaps © OpenStreetMap contributors, © CARTO.
+India boundary © [DataMeet Community Maps](https://github.com/datameet/maps); basemap
+boundary correction via [india_boundary_corrector](https://github.com/ramSeraph/india_boundary_corrector)
+(© ramSeraph, Unlicense; data OSM ODbL / Natural Earth).
+
+---
+
+© 2026 Sharad Gupta. Application code released under the MIT License; the elevation data
+and map layers remain under the licenses of their respective providers listed above.
