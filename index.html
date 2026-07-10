@@ -606,9 +606,81 @@
       font-family: inherit;
       font-size: 10px;
     }
+
+    /* ── Mobile drawer controls (hidden on desktop; shown in the media query
+       below) — the sidebar becomes an off-canvas drawer over a full-screen map
+       on narrow viewports, opened via this button and dismissed via the
+       backdrop, the in-header close button, or the toggle button again. ── */
+    .sidebar-header-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+    .sidebar-close {
+      display: none;
+      flex-shrink: 0;
+      background: none;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      font-size: 22px;
+      line-height: 1;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: color 0.15s;
+    }
+    .sidebar-close:hover { color: #f1f5f9; }
+
+    #sidebar-toggle {
+      display: none;
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 900;
+      width: 40px;
+      height: 40px;
+      align-items: center;
+      justify-content: center;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: #f1f5f9;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.35);
+    }
+    #sidebar-toggle svg { width: 20px; height: 20px; }
+
+    #sidebar-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 999;
+    }
+    #sidebar-backdrop.visible { display: block; }
+
+    @media (max-width: 768px) {
+      #sidebar-toggle { display: flex; }
+      .sidebar-close { display: inline-block; }
+
+      #sidebar {
+        position: fixed;
+        top: 0; left: 0; bottom: 0;
+        width: 86vw;
+        max-width: 340px;
+        min-width: 0;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        box-shadow: 4px 0 24px rgba(0,0,0,0.45);
+      }
+      #sidebar.open { transform: translateX(0); }
+    }
   </style>
 </head>
 <body>
+
+<!-- Opens the sidebar drawer on narrow screens; hidden on desktop via CSS -->
+<button id="sidebar-toggle" onclick="toggleSidebar()" aria-label="Open menu">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M3 6h18M3 12h18M3 18h18"/>
+  </svg>
+</button>
 
 <!-- ═══════════════════════════════════════════════════════════
      SIDEBAR
@@ -616,10 +688,13 @@
 <div id="sidebar">
 
   <div class="sidebar-header">
-    <h1>
-      🗻 Global DEM Portal
-      <span class="version-badge">v1</span>
-    </h1>
+    <div class="sidebar-header-row">
+      <h1>
+        🗻 Global DEM Portal
+        <span class="version-badge">v1</span>
+      </h1>
+      <button class="sidebar-close" onclick="closeSidebar()" aria-label="Close menu">×</button>
+    </div>
     <p>Select tiles on the map, then download SRTM, NASADEM, ALOS or Copernicus elevation data as GeoTIFF</p>
   </div>
 
@@ -848,6 +923,9 @@
   </div>
 
 </div>
+
+<!-- Dims the map and closes the drawer on tap; only visible while the drawer is open -->
+<div id="sidebar-backdrop" onclick="closeSidebar()"></div>
 
 <!-- ═══════════════════════════════════════════════════════════
      MAP
@@ -1389,6 +1467,10 @@ function setTool(tool) {
     activeDrawer = new L.Draw.Polygon(map, { allowIntersection: false, shapeOptions: { color: '#3b82f6', fillOpacity: 0.08, weight: 2 } });
     activeDrawer.enable();
   }
+
+  // On the mobile drawer, drawing needs the map visible — close it automatically.
+  // No-op on desktop, where the sidebar isn't an overlay.
+  if (tool === 'rect' || tool === 'polygon') closeSidebar();
 }
 
 function selectVisibleTiles() {
@@ -1410,6 +1492,7 @@ function selectTilesInBounds(bounds) {
   notify(count ? `Selected ${count} tile${count !== 1 ? 's' : ''}` : 'No land tiles in that area', count ? 'success' : 'info');
   updateUI();
   srtmLayer._redraw();
+  if (count) closeSidebar(); // reveal the map result on mobile
 }
 
 // ════════════════════════════════════════════════════════════
@@ -1446,6 +1529,7 @@ async function searchCountry() {
     srtmLayer._redraw();
     st.innerHTML = `<span style="color:#22c55e">✓ ${tiles.length} tiles selected for India (official boundary)</span>`;
     notify(`${tiles.length} tiles selected for India`, 'success');
+    closeSidebar();
     return;
   }
 
@@ -1471,6 +1555,7 @@ async function searchCountry() {
     const label = item.display_name.split(',')[0];
     st.innerHTML = `<span style="color:#22c55e">✓ ${tiles.length} tiles selected for ${label}</span>`;
     notify(`${tiles.length} tiles selected for ${label}`, 'success');
+    closeSidebar();
   } catch {
     st.innerHTML = '<span style="color:#ef4444">Search failed — check connection</span>';
     notify('Country search failed', 'error');
@@ -1501,6 +1586,7 @@ function handleGeoJSONFile(evt) {
       const bb = geomBBox(geom);
       map.fitBounds([[bb.minLat, bb.minLng], [bb.maxLat, bb.maxLng]]);
       notify(`${tiles.length} tiles selected from GeoJSON`, 'success');
+      closeSidebar();
     } catch { notify('Failed to parse GeoJSON', 'error'); }
   };
   reader.readAsText(file);
@@ -1583,6 +1669,7 @@ function zoomToSelection() {
     if (lon < mnLo) mnLo = lon; if (lon + 1 > mxLo) mxLo = lon + 1;
   });
   map.fitBounds([[mnLa, mnLo], [mxLa, mxLo]]);
+  closeSidebar(); // this action is specifically "show me the map"
 }
 
 function clearAll() {
@@ -1606,6 +1693,24 @@ document.querySelectorAll('.tab').forEach(t => {
     document.getElementById(`tab-${name}`)?.classList.add('active');
   });
 });
+
+// ════════════════════════════════════════════════════════════
+// MOBILE DRAWER
+// ════════════════════════════════════════════════════════════
+// On narrow screens the sidebar is an off-canvas drawer over a full-screen map (see the
+// #sidebar-toggle / #sidebar-backdrop CSS). These are harmless no-ops on desktop, where
+// the media query never applies the 'open' class's transform.
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebar-backdrop').classList.add('visible');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-backdrop').classList.remove('visible');
+}
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.contains('open') ? closeSidebar() : openSidebar();
+}
 
 // ════════════════════════════════════════════════════════════
 // IN-BROWSER DOWNLOADER
