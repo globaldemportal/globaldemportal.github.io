@@ -1,12 +1,29 @@
 # Global DEM Portal
 
 A single-page web app for selecting elevation tiles on a map and downloading them as
-GeoTIFF, across six free global DEMs. No build step, no backend, no API keys —
+GeoTIFF, across six free global DEMs. No build step, no backend, no API keys -
 `index.html` is the whole application.
 
-By **Sharad Gupta** — [github.com/sharadgupta27](https://github.com/sharadgupta27) ·
+By **Sharad Gupta** - [github.com/sharadgupta27](https://github.com/sharadgupta27) ·
 [linkedin.com/in/sharadgupta27](https://www.linkedin.com/in/sharadgupta27/) ·
 [sharadgupta27@gmail.com](mailto:sharadgupta27@gmail.com)
+
+## Why this portal
+
+Free global elevation data has always technically been "open," but getting a usable
+GeoTIFF for a specific area is rarely simple in practice. NASA's official SRTM
+distribution requires an Earthdata account and blocks direct browser access. Country-scale
+downloads mean stitching together dozens of manually-named tiles. Different DEM products
+(SRTM, NASADEM, ALOS, Copernicus) live on different portals with different tile-naming
+conventions and coverage limits, so comparing them means learning each one from scratch.
+And most GIS tools that *can* do all this assume you already have QGIS, GDAL, or a Python
+environment installed - a real barrier for students, hobbyist mappers, or anyone who just
+wants elevation data for one region without setting up a geospatial toolchain first.
+
+This portal collapses that into: open a web page, click the area (or search a country, or
+draw a shape, or upload a boundary), pick a resolution, download. No login, no installed
+software, no per-dataset learning curve - and because it runs entirely client-side, it
+costs nothing to host and adds no processing delay between the source data and your disk.
 
 ## Datasets
 
@@ -25,13 +42,13 @@ selected product.
 | `COP90` Copernicus GLO-90 | ~90 m (TanDEM-X) | global | `raster/COP90/COP90_hh/Copernicus_DSM_30_{...}_DEM.tif` |
 
 The **Copernicus GLO-30/GLO-90** products are ESA's openly redistributable global DEM,
-edited from Airbus **TanDEM-X** radar — they are the freely available "TanDEM-based" DEM.
+edited from Airbus **TanDEM-X** radar - they are the freely available "TanDEM-based" DEM.
 (DLR's raw TanDEM-X 90 m product is also free but sits behind a registration wall with no
 CORS, so it cannot be served to a browser; Copernicus is the open, browser-reachable form
 of the same source data.)
 
 NASA's own LP DAAC Cloud distribution hosts SRTM/NASADEM too, but every request needs an
-Earthdata login and sends no CORS headers — those URLs cannot be fetched or clicked from a
+Earthdata login and sends no CORS headers - those URLs cannot be fetched or clicked from a
 web page, which is why this portal uses the OpenTopography mirror instead.
 
 Tiles covering only ocean (or a latitude a given product does not reach) are absent from
@@ -43,7 +60,7 @@ treating them as errors.
 To keep users from selecting empty water, the map draws its grid only over 1°×1° cells
 that actually have a tile, and clicks/box-selections over ocean are ignored. This is driven
 by a compact bitmask (`LAND_MASK_B64` in `index.html`, ~8 KB) built from the union of the
-SRTM GL1 and Copernicus GLO-90 tile listings on the mirror — 26,481 land cells worldwide.
+SRTM GL1 and Copernicus GLO-90 tile listings on the mirror - 26,481 land cells worldwide.
 It is a static snapshot; regenerate it if the mirror's coverage ever changes
 (`scripts/build_land_mask.py`).
 
@@ -54,7 +71,7 @@ India's boundary is corrected in two independent places:
 **1. On the basemap (what you see).** The CARTO/OSM raster basemaps draw India along the
 de-facto line. The [india_boundary_corrector](https://github.com/ramSeraph/india_boundary_corrector)
 library (loaded from jsDelivr, `L.tileLayer.indiaBoundaryCorrected`) rewrites those tiles
-on the fly — masking the incorrect boundary and drawing India's official one from a bundled
+on the fly - masking the incorrect boundary and drawing India's official one from a bundled
 PMTiles dataset. If that CDN script fails to load, the app falls back to plain tiles.
 
 **2. In tile selection (what you download).** Searching **India** uses an embedded official
@@ -67,29 +84,39 @@ composite), simplified; regenerate with `scripts/build_india_boundary.py`.
 
 ## Downloading
 
-* **One tile selected** — saves a single `.tif`.
-* **Several tiles** — fetches them (4 at a time), bundles them into a ZIP with
+* **One tile selected** - saves a single `.tif`.
+* **Several tiles** - fetches them (4 at a time), bundles them into a ZIP with
   [JSZip](https://stuk.github.io/jszip/) (loaded on demand), and saves that.
-* **Large selections** — the whole archive is assembled in browser memory, so above
+* **Large selections** - the whole archive is assembled in browser memory, so above
   ~1 GB the app asks for confirmation and points you at the wget or Python script.
-* **Merged GeoTIFF** — the *Merged GeoTIFF* tab generates an
+* **Merged GeoTIFF** - the *Merged GeoTIFF* tab generates an
   [OpenTopography API](https://portal.opentopography.org/apidocs/) call that returns one
   mosaicked raster for the whole bounding box instead of separate tiles. That endpoint
   needs a free API key.
 
-To mosaic tiles yourself after downloading:
+To mosaic tiles yourself after downloading, use `scripts/merge_dem.py`. It's a thin
+wrapper around [GDAL](https://gdal.org) - GDAL itself isn't bundled here (it's a large
+C++ toolkit, not something to ship inside a static web page), so install it once:
 
 ```bash
-gdal_merge.py -o srtm_merged.tif srtm_data/*.tif
+conda install -c conda-forge gdal      # easiest, cross-platform
+# or: sudo apt install gdal-bin (Debian/Ubuntu) · brew install gdal (macOS)
+# or: OSGeo4W (https://trac.osgeo.org/osgeo4w/) on Windows
+
+python scripts/merge_dem.py                       # srtm_data/*.tif -> srtm_merged.tif
+python scripts/merge_dem.py <input_dir> <output.tif>
 ```
+
+If you'd rather call GDAL directly: `gdal_merge.py -o srtm_merged.tif srtm_data/*.tif`
+works the same way once GDAL is on your PATH.
 
 ## Attribution
 
-* **SRTM** — NASA JPL (2013), *SRTM Global 1 arc second*,
+* **SRTM** - NASA JPL (2013), *SRTM Global 1 arc second*,
   [doi:10.5067/MEaSUREs/SRTM/SRTMGL1.003](https://doi.org/10.5067/MEaSUREs/SRTM/SRTMGL1.003)
-* **NASADEM** — NASA JPL (2020), NASADEM_HGT v001
-* **ALOS AW3D30** — © JAXA, ALOS World 3D-30m
-* **Copernicus GLO-30 / GLO-90** — © ESA / Airbus, produced from TanDEM-X
+* **NASADEM** - NASA JPL (2020), NASADEM_HGT v001
+* **ALOS AW3D30** - © JAXA, ALOS World 3D-30m
+* **Copernicus GLO-30 / GLO-90** - © ESA / Airbus, produced from TanDEM-X
 
 All redistributed by OpenTopography. Basemaps © OpenStreetMap contributors, © CARTO.
 India boundary © [DataMeet Community Maps](https://github.com/datameet/maps); basemap

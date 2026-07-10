@@ -16,7 +16,12 @@
       background: #0f172a;
       color: #f1f5f9;
       display: flex;
+      /* 100vh is taller than the real visible area on mobile browsers, which size it
+         before the address bar collapses — dvh (dynamic viewport height) tracks the
+         actual visible viewport. Keep the vh line first as a fallback for browsers
+         that don't support dvh yet. */
       height: 100vh;
+      height: 100dvh;
       overflow: hidden;
     }
 
@@ -28,9 +33,15 @@
       display: flex;
       flex-direction: column;
       height: 100vh;
+      height: 100dvh;
       z-index: 1000;
       border-right: 1px solid #334155;
-      overflow: hidden;
+      /* Vertical safety net: if content ever runs taller than the viewport (small
+         phones, browser UI quirks, larger text settings), let the sidebar itself
+         scroll instead of silently clipping the bottom (e.g. the footer/contact
+         links) with no way to reach it. */
+      overflow-y: auto;
+      overflow-x: hidden;
     }
 
     .sidebar-header {
@@ -119,6 +130,9 @@
       padding: 14px 14px 10px;
       overflow-y: auto;
       flex: 1;
+      min-height: 0; /* let this pane shrink & scroll internally, instead of forcing
+                        the sidebar taller than the viewport and pushing the footer
+                        out of view */
     }
     .tab-content.active { display: block; }
     ::-webkit-scrollbar { width: 4px; }
@@ -368,7 +382,7 @@
     .footer-links svg { width: 12px; height: 12px; }
 
     /* ── Map ─────────────────────────────────────── */
-    #map { flex: 1; height: 100vh; }
+    #map { flex: 1; height: 100vh; height: 100dvh; }
     /* Match Leaflet's backdrop to the dark theme so any area outside the single
        world (at min zoom) reads as ocean, not a gray void. */
     .leaflet-container { background: #0f172a; }
