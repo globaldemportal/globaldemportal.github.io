@@ -60,40 +60,8 @@ To mosaic tiles yourself after downloading:
 gdal_merge.py -o srtm_merged.tif srtm_data/*.tif
 ```
 
-## Hosting on GitHub Pages
-
-Yes — free, and this app is a perfect fit: it is fully static, and every service it calls
-(the OpenTopography mirror, OpenStreetMap Nominatim, the basemap tiles) is reachable over
-HTTPS with CORS from any origin.
-
-```bash
-git init
-git add index.html README.md
-git commit -m "SRTM DEM Portal"
-git branch -M main
-git remote add origin https://github.com/<you>/srtm-dem-portal.git
-git push -u origin main
-```
-
-Then in the repository: **Settings → Pages → Source: Deploy from a branch**, pick
-`main` and `/ (root)`, and save. The site appears at
-`https://<you>.github.io/srtm-dem-portal/` within a minute or two.
-
-Notes for a public deployment:
-
-* The repository must be public for Pages on a free account. (Private repos can publish
-  Pages only on a paid plan.)
-* Pages is HTTPS-only, which the OpenTopography mirror requires — do not proxy it over
-  plain HTTP.
-* Nominatim's [usage policy](https://operations.osmfoundation.org/policies/nominatim/)
-  caps geocoding at one request per second. The country search sends one request per
-  lookup, which is fine for interactive use; do not add autocomplete-as-you-type.
-* Bandwidth is not a concern: DEM tiles stream from OpenTopography straight to the
-  visitor's browser and never touch GitHub's servers.
-
 ## Attribution
 
-Cite whichever dataset you download:
 
 * **SRTM** — NASA JPL (2013), *SRTM Global 1 arc second*,
   [doi:10.5067/MEaSUREs/SRTM/SRTMGL1.003](https://doi.org/10.5067/MEaSUREs/SRTM/SRTMGL1.003)
