@@ -17,7 +17,7 @@
       color: #f1f5f9;
       display: flex;
       /* 100vh is taller than the real visible area on mobile browsers, which size it
-         before the address bar collapses — dvh (dynamic viewport height) tracks the
+         before the address bar collapses - dvh (dynamic viewport height) tracks the
          actual visible viewport. Keep the vh line first as a fallback for browsers
          that don't support dvh yet. */
       height: 100vh;
@@ -608,7 +608,7 @@
     }
 
     /* ── Mobile drawer controls (hidden on desktop; shown in the media query
-       below) — the sidebar becomes an off-canvas drawer over a full-screen map
+       below) - the sidebar becomes an off-canvas drawer over a full-screen map
        on narrow viewports, opened via this button and dismissed via the
        backdrop, the in-header close button, or the toggle button again. ── */
     .sidebar-header-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
@@ -706,7 +706,7 @@
     </div>
     <div class="stat-divider"></div>
     <div class="stat-item">
-      <div class="stat-value" id="stat-size">—</div>
+      <div class="stat-value" id="stat-size">-</div>
       <div class="stat-label">Est. Size</div>
     </div>
     <div class="stat-divider"></div>
@@ -799,8 +799,8 @@
       <div>
         <div class="option-label">Product</div>
         <select class="product-select" id="product-select">
-          <option value="SRTMGL1">SRTM GL1 — 1 arc-sec (~30 m)</option>
-          <option value="NASADEM">NASADEM — void-filled SRTM (~30 m)</option>
+          <option value="SRTMGL1">SRTM GL1 - 1 arc-sec (~30 m)</option>
+          <option value="NASADEM">NASADEM - void-filled SRTM (~30 m)</option>
         </select>
       </div>
     </div>
@@ -828,7 +828,7 @@
   <div class="tab-content" id="tab-info">
     <div class="info-section">
       <h3>About</h3>
-      <p>Select 1°×1° tiles and download open global elevation data as GeoTIFF. Six free DEMs are available — pick one under <strong style="color:#f1f5f9">Dataset Options</strong>. Coverage differs by mission, so the red boundary lines on the map move when you switch products.</p>
+      <p>Select 1°×1° tiles and download open global elevation data as GeoTIFF. Six free DEMs are available - pick one under <strong style="color:#f1f5f9">Dataset Options</strong>. Coverage differs by mission, so the red boundary lines on the map move when you switch products.</p>
     </div>
     <div class="info-section">
       <h3>Datasets</h3>
@@ -846,9 +846,9 @@
     </div>
     <div class="info-section">
       <h3>Sources</h3>
-      <p><strong style="color:#f1f5f9">SRTM / NASADEM</strong> — NASA/USGS radar (2000).<br>
-      <strong style="color:#f1f5f9">ALOS AW3D30</strong> — JAXA optical stereo (2006–2011).<br>
-      <strong style="color:#f1f5f9">Copernicus GLO-30/90</strong> — ESA's open DEM edited from Airbus <em>TanDEM-X</em> radar (2011–2015); the freely redistributable TanDEM-X-based global DEM.</p>
+      <p><strong style="color:#f1f5f9">SRTM / NASADEM</strong> - NASA/USGS radar (2000).<br>
+      <strong style="color:#f1f5f9">ALOS AW3D30</strong> - JAXA optical stereo (2006–2011).<br>
+      <strong style="color:#f1f5f9">Copernicus GLO-30/90</strong> - ESA's open DEM edited from Airbus <em>TanDEM-X</em> radar (2011–2015); the freely redistributable TanDEM-X-based global DEM.</p>
     </div>
     <div class="info-section">
       <h3>Tile Naming Convention</h3>
@@ -862,7 +862,7 @@
       <h3>Data Access</h3>
       <p>
         Tiles download straight from the <a href="https://opentopography.org" target="_blank">OpenTopography</a>
-        public mirror as GeoTIFF — no account, no login.<br>
+        public mirror as GeoTIFF - no account, no login.<br>
         NASA's own <a href="https://earthdata.nasa.gov" target="_blank">Earthdata</a> distribution serves the same
         data but requires a login and blocks browser requests, so it cannot be used directly from a web page.
       </p>
@@ -873,6 +873,12 @@
         <a href="https://doi.org/10.5067/MEaSUREs/SRTM/SRTMGL1.003" target="_blank">doi:10.5067/MEaSUREs/SRTM/SRTMGL1.003</a>.
         ALOS AW3D30: © JAXA. Copernicus DEM: © ESA / Airbus, produced from TanDEM-X.
         All redistributed by <a href="https://opentopography.org" target="_blank">OpenTopography</a>.</p>
+    </div>
+    <div class="info-section">
+      <h3>Upcoming Changes</h3>
+      <p>Two bare-earth DEMs are planned as additional dataset options:</p>
+      <p><strong style="color:#f1f5f9">FABDEM</strong> (Forest And Buildings removed DEM) - University of Bristol, ~30 m, global. Takes Copernicus GLO-30 and uses a machine-learning correction to strip out tree canopy and building heights, leaving a true bare-earth terrain model instead of a surface model. Free for non-commercial/research use.</p>
+      <p><strong style="color:#f1f5f9">DeltaDTM</strong> - TU Delft, ~30 m, coastal zones only (land below ~10 m elevation). A bare-earth terrain model purpose-built for low-lying coastal and delta areas, correcting for vegetation and building bias using ICESat-2 and machine learning. Designed for coastal flood-risk and sea-level-rise modeling where standard DEMs overestimate ground height.</p>
     </div>
     <div class="info-section">
       <h3>Author &amp; Contact</h3>
@@ -901,19 +907,19 @@
   <div class="sidebar-footer">
     <div>© 2026 Sharad Gupta</div>
     <div class="footer-links">
-      <a href="https://github.com/sharadgupta27" target="_blank" rel="noopener" title="GitHub — sharadgupta27">
+      <a href="https://github.com/sharadgupta27" target="_blank" rel="noopener" title="GitHub - sharadgupta27">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.34-1.3-1.7-1.3-1.7-1.06-.72.08-.71.08-.71 1.17.08 1.79 1.2 1.79 1.2 1.04 1.79 2.73 1.27 3.4.97.1-.76.41-1.27.74-1.56-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.25 5.68.42.36.79 1.08.79 2.18v3.23c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/>
         </svg>
         GitHub
       </a>
-      <a href="https://www.linkedin.com/in/sharadgupta27/" target="_blank" rel="noopener" title="LinkedIn — sharadgupta27">
+      <a href="https://www.linkedin.com/in/sharadgupta27/" target="_blank" rel="noopener" title="LinkedIn - sharadgupta27">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.8 0 0 .78 0 1.75v20.5C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.75V1.75C24 .78 23.2 0 22.22 0z"/>
         </svg>
         LinkedIn
       </a>
-      <a href="mailto:sharadgupta27@gmail.com" onclick="return copyEmail()" title="Click to copy — sharadgupta27@gmail.com">
+      <a href="mailto:sharadgupta27@gmail.com" onclick="return copyEmail()" title="Click to copy - sharadgupta27@gmail.com">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>
         </svg>
@@ -950,7 +956,7 @@
     <div class="modal-body">
       <div class="info-box">
         ✅ Tiles are served as <strong>GeoTIFF</strong> from the
-        <a href="https://opentopography.org" target="_blank">OpenTopography</a> public mirror —
+        <a href="https://opentopography.org" target="_blank">OpenTopography</a> public mirror -
         no account, no login, direct download. Ocean-only tiles have no data and are skipped automatically.
       </div>
 
@@ -982,11 +988,11 @@
         <div class="url-list" id="wget-script"></div>
       </div>
       <div id="dl-panel-python" style="display:none">
-        <div class="url-count-label">Plain <code style="color:#93c5fd">requests</code> — no authentication · <code style="color:#93c5fd">pip install requests</code></div>
+        <div class="url-count-label">Plain <code style="color:#93c5fd">requests</code> - no authentication · <code style="color:#93c5fd">pip install requests</code></div>
         <div class="url-list" id="python-script"></div>
       </div>
       <div id="dl-panel-otopo" style="display:none">
-        <div class="url-count-label">OpenTopography API — covers the bounding box of your selection</div>
+        <div class="url-count-label">OpenTopography API - covers the bounding box of your selection</div>
         <div class="url-list" id="otopo-script"></div>
       </div>
     </div>
@@ -1012,7 +1018,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
 <!-- Corrects India's boundary on the raster basemaps to the official (Government of India)
-     line — Kashmir/PoK/Aksai Chin/Arunachal. https://github.com/ramSeraph/india_boundary_corrector -->
+     line - Kashmir/PoK/Aksai Chin/Arunachal. https://github.com/ramSeraph/india_boundary_corrector -->
 <script src="https://cdn.jsdelivr.net/npm/@india-boundary-corrector/leaflet-layer@0.2.2/dist/index.global.js"></script>
 <script>
 // ════════════════════════════════════════════════════════════
@@ -1022,7 +1028,7 @@ const SRTM = {
   LON_MIN: -180, LON_MAX: 180
 };
 
-// OpenTopography public S3 mirror — anonymous access, CORS-enabled, GeoTIFF tiles.
+// OpenTopography public S3 mirror - anonymous access, CORS-enabled, GeoTIFF tiles.
 // (NASA's own LP DAAC Cloud endpoint requires an Earthdata login and sends no CORS
 //  headers, so its URLs can neither be clicked nor fetched from a web page.)
 const OT_BASE = 'https://opentopography.s3.sdsc.edu/raster';
@@ -1046,31 +1052,31 @@ function alosName(tile) {
 
 // Each product: display label, resolution class, coverage band (latMin/latMax),
 // average per-tile size (MB, for the estimate), and its URL + saved-filename builders.
-// Coverage differs by mission — SRTM only reached 56°S–60°N, whereas Copernicus is
+// Coverage differs by mission - SRTM only reached 56°S–60°N, whereas Copernicus is
 // truly global and ALOS reaches ~82°.
 const PRODUCTS = {
   SRTMGL1: {
-    label: 'SRTM GL1 — 1 arc-sec (~30 m)', res: '1arc', latMin: -56, latMax: 60, sizeMB: 14,
+    label: 'SRTM GL1 - 1 arc-sec (~30 m)', res: '1arc', latMin: -56, latMax: 60, sizeMB: 14,
     url:  t => `${OT_BASE}/SRTM_GL1/SRTM_GL1_srtm/${t}.tif`,
     file: t => `${t}.tif`
   },
   NASADEM: {
-    label: 'NASADEM — void-filled SRTM (~30 m)', res: '1arc', latMin: -56, latMax: 60, sizeMB: 14,
+    label: 'NASADEM - void-filled SRTM (~30 m)', res: '1arc', latMin: -56, latMax: 60, sizeMB: 14,
     url:  t => `${OT_BASE}/NASADEM/NASADEM_be/NASADEM_HGT_${t.toLowerCase()}.tif`,
     file: t => `NASADEM_HGT_${t.toLowerCase()}.tif`
   },
   ALOS: {
-    label: 'ALOS AW3D30 — JAXA (~30 m)', res: '1arc', latMin: -82, latMax: 82, sizeMB: 20,
+    label: 'ALOS AW3D30 - JAXA (~30 m)', res: '1arc', latMin: -82, latMax: 82, sizeMB: 20,
     url:  t => `${OT_BASE}/AW3D30/AW3D30_global/${alosName(t)}`,
     file: t => alosName(t)
   },
   COP30: {
-    label: 'Copernicus GLO-30 — TanDEM-X (~30 m)', res: '1arc', latMin: -90, latMax: 90, sizeMB: 50,
+    label: 'Copernicus GLO-30 - TanDEM-X (~30 m)', res: '1arc', latMin: -90, latMax: 90, sizeMB: 50,
     url:  t => `${OT_BASE}/COP30/COP30_hh/${copName('10', t)}`,
     file: t => copName('10', t)
   },
   SRTMGL3: {
-    label: 'SRTM GL3 — 3 arc-sec (~90 m)', res: '3arc', latMin: -56, latMax: 60, sizeMB: 2,
+    label: 'SRTM GL3 - 3 arc-sec (~90 m)', res: '3arc', latMin: -56, latMax: 60, sizeMB: 2,
     url:  t => {
       const { lat } = parseTileName(t);
       const dir = lat < 0 ? 'South' : lat < 30 ? 'North/North_0_29' : 'North/North_30_60';
@@ -1079,7 +1085,7 @@ const PRODUCTS = {
     file: t => `${t}.tif`
   },
   COP90: {
-    label: 'Copernicus GLO-90 — TanDEM-X (~90 m)', res: '3arc', latMin: -90, latMax: 90, sizeMB: 6,
+    label: 'Copernicus GLO-90 - TanDEM-X (~90 m)', res: '3arc', latMin: -90, latMax: 90, sizeMB: 6,
     url:  t => `${OT_BASE}/COP90/COP90_hh/${copName('30', t)}`,
     file: t => copName('30', t)
   }
@@ -1104,7 +1110,7 @@ let COVERAGE = { latMin: PRODUCTS.SRTMGL1.latMin, latMax: PRODUCTS.SRTMGL1.latMa
 // LAND / DATA MASK
 // ════════════════════════════════════════════════════════════
 // 1°×1° bitmask of cells that actually have a DEM tile on the mirror (union of SRTM GL1
-// and Copernicus GLO-90). Ocean cells are absent — no grid is drawn and no tile can be
+// and Copernicus GLO-90). Ocean cells are absent - no grid is drawn and no tile can be
 // selected over open water. Bit index = (lat + 90) * 360 + (lon + 180).
 const LAND_MASK_B64 = "////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////DwDw////////////////////////////////////////////////////////AADA8////////////////wMA8P///////////////////////////////zwAAAAAwP//////////////PwAAAP///////////////////////////////wMAAAAAAMD8////////////AAAAAPz//////////////////////////////w8AAAAAAAAA8P//////////AwAAAPz//////////////////////////////z8AAAAAAAAAAAAA/P8//P//AwAAAAD///////////////////////////////8AAAAAAAAAAAAA8D8AwP//AAAAAADA//////////////////////////////8AAAAAAAAAAAAAAAAAwP//AAAAAAAA/////////////////////////////w8AAAAAAAAAAAAAAAAAAP//AAAAAAAAAPz8//P/////////////////////PwAAAAAAAAAAAAAAAAADAPz/AAAAAAAAAAAAAADw/P///z//////////////AwAAAwAAAAAAAAAAAAAAAMD/AAAAAAAAAAAAAAAAwP///wPw//////////8AAAMAAAAAAAAAAAAAAAAAAMD/AAAAAAAAAAAAAAAAAPA/AADw/////////z8AwAAAAAAAAAAAAAAAAAAAAAD/AwAAAAAAAAAAAAAAAAAPAAAADP8/PAAADAAAAAAAAAAAAAAAAAAAAAAAAAD8DwAAAAAAAAAAAAAAAAAAAAAAADwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAgAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPADAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAPwfAADgAQAAAIAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAP4BAABkAAAAAAAAAAAAAAAAADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/AAwAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAADAAAAAAAAAAAAAAAAAAAP/ABwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP9BAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAAAAAP8BAAAAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAP8HAAAAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAP8HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABiAAAAAAAAAAAAAAAAAAP8DAAAAAAAAAAAAAAAABsABAAAAAAAAAAAAAAAAAHwAAAAAAAAAAAAAAAAAAP8HAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAPwAGAAAAAAAAAAAAAAAAP8HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPgAGAAAAAAAAAAAAAAAAP4PAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOABAPADAAAAAAAAAAAAAAAAAP4fAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOABAMAHAAAAAAAAAAAAAAAAAP4/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPABAIAfAAAAAAAAAAAAAAAAAPx/AAAAAAAABgAAAAAAAAAAAAAAAAAAAAAAAPgBAAAfAAAAAAAAAAAAAAAAAPx/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANgBAAB+AAAAAAAAAAAAAAAAAPz/BwAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAP8AAAB8AAAAAAAAAAAAAAAAAPz/DwAAAACAAAAAAAAAAAAAAAACAAAAAAAAgP8HAAB8AAAAAAAAAAAAAAAAAPz/DwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAsP8HAAAeAAAAAAAAAAAAAAAAAPj/JwAAAAAAAAAAAAAAAAAAAAAAAAAAAAcA+P8HAAAOAAAAAAAAAAAAAAAAAPj/fwAAAAAAAAAAwD8AAAAAAAAAAAAAwP8A/P8PAAADAAAAAAAAAAAAAAAAKPD//wAAAAAAAAAA4P8AAAAAAAAAAAAAwP8B/P8PAAAAAAAAAAAAAAAAAAAAAPD//wEAAAAAAAAA4P8DAAAAAAAAAAAAgP8f//8fAAAAAgAAAAAAAAAAAAAAAPD//wMAAAAAAAAA4P8HAAAAAAAAAAAAgP////8/CAAAAgAAAAAAAAAAAAAAAPD//wMAAAAAAAAA4P8HAAAAAAAAAAAAwP////8/AAAABAAAAAAAAAAAAAAAAPD//wcAAAAAAAAA8P8PAAAAAAAAAAAAwP////8/AAgAAAAAAAAAAAAAAAAAAPD//w8AAAAAAAAA+P8fAAAAAAAAAAAA4P////8/AAgAAAAAABgAAABAAAAAAPD//w8AAAAAAAAA+P8fAAAAAAAAAAAA4P////8/AAAAAAAAAAAAAAAABAAAGOD//w8AAAAAAAAA/P8fAAAAAAAAAAAA4P////8/AAAAAAAAAAAAAgAAAAAAAOD//x8AAAAAAAAA/P9/AA8AAAAAAAAA8P////8/AAAAAAAAAAAAiAAAAAAAAOD//38AAAAAAAAA/P//gA8AAAAAAAAA4P////8/AAAAAAAAQAE0AgAAAAAAAOD///8HAAAAAAAA/P//gA8AAAAAAAAA4P////+fAAAACAAAGAAqAAAAAAAAAOD///8PAAAAAAAA/P//kB8AAAAAAAAA4P////+XAJ4BMgBQAoAbAAAAAAAAAOD///8PAAAAAAAA/v//iB8IAAAAAAAA4P//////DB8AMgBgABADAAAAAAAAAOD///8PwAAAAAAA/v//gB8oAAAAAAAAgP////9HgC8AMwRgAMwDAAAAAAAAAOD///8fAAAAAAAA////AD8gCAAAAAAAAPz///8BjGHgYwQRAOAPAAAAAAAAAOD///8fAAAAAACA////gz8AAAAAAAAAAOD//38AwDDgAwAB4PwCAAAAAAAAAPj///8/AAAAAACA////zz8AAAAAAAAAAMz//3+dQBDwAwAAfv4AAAAAAAAAAP7///8/AAAAQACA////n3+AAAAAAAAAAMD//38GABjgUQAAgq8AAAAAAAAAAP////8/AAAAQACA////H34EAAAAAAAAAID/Pz4CABwABg8AgE8CAAAAAAAAgP////8/AAAAAAAA////H3gAAAAAAAAAAKD/Hz4AABwAiAEBAAAAAAAAAAAAgP////8/AAAAAAAA////H3oAAAAAAAAAACDuHx4AAAwAAAAAAAAAAAAAAAAAwP////9/AAAAAAAA////nzMAAAAAABAAAMDAHw4AABAwAEEAEAAAAAAAAAAAwP////9/AAAAAAAA/v//nygAAAAAABAAAEDAHx54GGQAAEAMKAADAAAAAAAA4P//////AAAAAAAA/v//H4gQAAAAAAAgAPgBE44/YAaAAAFkIIADAAAAAAAA4P//////AQAAAAAA////D8wAAAAAAAAAAJ8HAN8/fAiAgABgAIABAAAAAAAA8P//////AwAAAAAA/v//DwAAAAAAAAAA/P//4O8ffwDAAAAAAIAAAAAAAAAA8P//////AwAgAAAA////DwARABAAAADg//b+5P+AHwBgAAAAAAAAAAAAAAAA/P//////AwAAAAAA////DwADAAgAAADg/33lxf/PAwAwAAAAAQAAAAAAAAAA/P//////AQAAAACA////DwAKABgAAAD8Vf7J5//fCAAQoAEAAgAAAAAAAAAA/P//////AAAAAACA////DwAKAAAAAAA+wP3g/3/+CwAAIAMAAgAAAAAAAAAA+P////8/DAAAAADA////HwAIAAAAAAD//f/+/x98AAAAAAEAAAAAAAAAAAAA/P////8fAAAAAADg////PwAAAAAAAID//////+cfAAAYAAAAAAAAAAAAAAAH/P////8AAAAAAADy////fwAAAAAAAMB///v///wHAAAcAAAYAAAAAAAAAAAH+P///z8AAAAAAAD0////fwAAACAAAOA//vv4HyAAACQECAAAAAAAAAAAAAAH+P///wcAAAAAAADk/////wAAADAAAODf///9BAAAAAADAABAAAAAAAAAAIAB8P///wcAAAAAAADo/////wMAACAAAODf/3+fAABAAAADAABAAAAAAAAAAAAA4P///wMAAAAAAADg/////wcAADAAAPj/+weaAAAAAAACAAAQAAAAAAAAAAAA5P///wMAAAAAAADw/////w8AADAAAPjv8QOGAABAAAADAAAIAAAAAAAAAAAAxP///wEAAAAAfAb+/////x8AADAAAHiP4R+OAQAAABAAAAACAAAAAAAAAAAQwP///wAAAAAA/j///////x8AADAQAHwPwD8HAQAgwjABAAACAAAAAAAAAAAAwP//HwAAAAAA/////////z8AADA4AIoHgPcHBAwaHqABAAAAAAAAAAAAAAAA/v//AwAAAADA/////////z8AADA4AMIBIOcHBPiaBpAAAAAAAAAAAAAAAAAA////AQAAAADA/////////38AACA/AONxuM8HJNFeAN4AAAAAAAAAAAAAAADA////AAAAAADg/////////38AAAAfAOF9wv4HwCEAEG4AAAAAAAAAAABAAADAAf//AAAAAADw//////////8AALAPAOH8wfwHgAAAAHYAAAAAAAAAAAAAAADgAf7bAAAAAAD4//////////gAALAPAOP8w/gDAAAAQC4AAAAAAAAAAAAAAADwB/hBAAAAAAD4/////////wMHAMgfAOP/A/gDAAAAAEAAAAAAAAAAAAAAAAD/DQDAAQAAAAD4/////////x8AAMAfAOf/A/ABABAAAAAAAAAAAAAAAAAAAID/CwDAAAAAABj8/////////38AAMAfAOL/A/ABACAAADAAAAAAAAAAAAAAANz/MwBQAAAAADj8//////////8BAOA/AOz/C3oAACAAAAAAAAQAAAAAAAAAgP9/AQBgAAAAACz4//////////8PAOB/APz/GXgAAGAAAAAAAAAAAAAAAAAA4P8fwRF/AAAAAAz4////////7/8fAOD/APz/AHAAACAAAAAAAAAAAQAAAAA6+P8f4P8/AAAAAAD4////////9/8/APD/Af5/B3AAACAAAAAAAACAAwAAAAAo/B8f3P8AAAAAAAD4//////////8/APD/B/9/D2AAACAAAAQAAADAAQAAAAAA/I8/8A8AAAAAAAD8////////+/9/APz/D///BmEAEDAAAAAAAAD4AAAAAAAA/ge+/x0AAAAAAAD8////////////AP7/////fzAAAAAAAAAAAAAYAAAAAABg/geFfw8AAAAAAAD4/////////f//AP///////zEAAAAAAAAAAKAEAAAAAABg/wcA3wcAAAAAAAD4////////////gP///////zsAAAAAAAAAABgAAAAAAAD5/wcA/gMAAAAAAADw//////////8/wP////////+DAAIgAAAAABkAAAAAAAD4/wcA/AAAAAAAAADg//////9////9/////////++BAAIAAAAAQAAAAAAAAADe/wcA/gAAAAAAAADg///////////+/////////x+cAAQAAAAAEAAAAAAAAAD//w8AbgAAAAAAAADe/////////////////////z84AAUAAAAABgAAAAAAACD//x8EDgAAAAAAAAD+/////////9///////////39wAAAAAAAAAAAAAAAAACD////PDwAAAAAAAABA/v///////////////////38gAAEAAAAAAAAAAAAAAID/////BwAAAAAAAAAY/P///////////////////3/gAAEAAAAAAAAAAAAAAID/////DwAAAAAAAAAA/P//v////////////////3/wgAEAAAAAAAAAAAAAAOD/////HwAIAAAAAAAM/P//jx/A/////////////z/wgwAAAAAAAAAAAAAAAPj/////fwAAAAAAAAAI+P//AACA/////////////x/03wAAAAAAAAAAAAAAAPj//////wAAAAAAAAAA4P//AHjw/////////////x/+/wAAAAAAAAAAAAAAAPz//////wEAAAAAAAAA4P//Bfjw/////////////x8+/wEAAAAAAAAAAAAAAP7//////wEAAAAAAAQA+Pf/Df7//////////////38++wEAAAAAAAAAAAAAAP///////wEAAAAAAAwA+A/8H////////////////3//8AMAAAAAAAAAAAAAAP///////wMAAAAAgAEA/D8wP////////////////zcfwAMAAAAAAAAAAAAAgP///////wMAAAAAkAEA/P8x+P///////////////+8fgAcAAAAAAAAAAAAAgP///////w8AAAAAAAAA+J8x//////////////////8/gAMAAAAAAAAAAAAAgP///////38AAAAAAAAA+P+wv/////////////////9/gAsAAAAAAAAAAAAAgP///////z8AAAAAAAAA/P/0///h8P//////////////hz8AAAAAAAAAAAAAgP////////+OAQAAAAAA/P//+/8B+P//////////////D38AAAAAAAAAAAAAgP////////9/AQAAAAAAAPz////j/v//////////////H/4AAAAAAAAAAAAAgP//////////AQAAAAAAAPz////3////////////////P4cHAAAAAAAAAAAAgP//////////+QAAAAAAAP7/////////////////////fw4eAAAAAAAAAAAAgP///////////wAAAAAAgP///////////////////////w4wAAAAAAAAAAAAwP////////8P/wAAAAAAwP///////////////////////xdgAAAAAAAAAAAA8P////////9/fgAAAAAAYP7//////////////////////x3AAAAAAAAAAAAA/P//////////HwAAAAAAwP///////////////////////w3AAQAAHwAAAAAA+///////////HwAAAAAA3v///////////////////////w8ABwDg+A8AAACA////////////HwAAAAAA/j///////////////////////w8ABwDvADwAAADA////////////HwAAAAAA/h///////////////////////w+AHwABAOAfAADA////////////DwAAAAAA/g/4/////////////////////wWAfxwAAAC/AQDg////////+///AwAAAAAA+AfwD///////////////////fwCAfwYAAAT8BgDw//////8f+P//AAAAAAAA8APwX///////////////////fwiA/wAAAAbgDwD4//////8H8P9/AAAAAABA+Af8//7//////////////////wEA/wAAAAD+HwD+//////8A+P8/AAAAAAAA8AP+//7//////////////////wcc/gEAAPD//9v//////z8A+P8eAMABAAAA4Af/////////////////////////+EcAwPD//////////z8A8P8PAPwDAAAAAA////////////////////////////8DAPD///////////8A/P8PAPwDAAAAMAD/P/////////////////////////8PAMz///////////8D//8/AP8PAAAAMAD/////////////////////////////AM////////////////w/wP8PAPAPAAD8////////////////////////////8Pz///////////////8/wP8/APz/AADw////////////////////////////////////////////8///wP//A/z/AADA////////////////////////////////////////////D///8P//D/A/AADA/////////////////////////////8D/////////////z///8P//DwAAAADA////////////////////////////D/D///////////////8PwP///w8AAAAA////z///////////////////////AAD///////////////8D8P///z8AAAAA/P//A/DA////////////////////AwD//z8A//D///z///8D8P////8ADAAAwP8PAAD/w/////////////////DAPwDAAwAA8P//z////z8A8P////8APAAAAPwDAMA/wP//////////////DwDAAAAAAAAAwP///////wMA/P////8AAAAAAAAAAMA/AP////////8/wP8PAAAAAAAAAAAAwP///////wAA/P////8AAAAAAAAAAAD/AM////////8//A8AAAAAAAAAAAAAwP//w///PwAA//////8PAAAAwAAAAAD8AwDM/////wMA/M8PAAAAAAAAAAAAAP//////PwDP//////8PAAAAAAAAAAD8/wDw/P//PwAA/P8/AAAAAAAAAAAAAP////////z///////8DAAAAPD8AAADA/wMA8P//PwAA8A8zDAAAAAAAAAAAAPz///////////////8PAAAA/z8AAAAAwADA8P//AwAAAAAAAwAAAAAAAAAAAAD//P////////////8PAADA/88PAAAAAAAAAP//AAAAAAAAAAAAAAAAAAAAAAAA/P////////////8PAADA//8MAPDAAAADwP8/AAAAAAAAAAAAAAAAAAAAAAAA8P//////////////AAAA////D////wD/8P8AAAAAAAAAAAAAAAAAAAAAAAAAAPD/////////////DwAAAAAAAPD//wAA8P8AAAAAAAAAAAAAAAAAAAAAAAAAAAD///////////8PAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8P8AAPD//w8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
 const LAND_MASK = (() => {
@@ -1121,7 +1127,7 @@ function hasLand(lat, lon) {
 }
 
 // ════════════════════════════════════════════════════════════
-// INDIA — OFFICIAL BOUNDARY
+// INDIA - OFFICIAL BOUNDARY
 // ════════════════════════════════════════════════════════════
 // India's boundary as claimed by the Government of India: includes all of Jammu &
 // Kashmir, Pakistan-administered Kashmir (incl. Gilgit-Baltistan), Aksai Chin, the
@@ -1131,7 +1137,7 @@ function hasLand(lat, lon) {
 const INDIA_BOUNDARY = {"type":"MultiPolygon","coordinates":[[[[77.5187,35.4857],[77.6301,35.4624],[77.6514,35.4873],[77.6881,35.4532],[77.8149,35.5219],[77.9127,35.4637],[77.9391,35.5589],[78.0418,35.586],[78.0927,35.5361],[78.1591,35.5527],[78.1959,35.6417],[78.1859,35.6752],[78.2085,35.6696],[78.2458,35.7259],[78.4104,35.7322],[78.4435,35.7803],[78.5391,35.7671],[78.6761,35.853],[78.8016,35.8733],[78.8627,35.9725],[79.0311,35.9153],[79.0838,35.9446],[79.2727,35.929],[79.3476,35.9868],[79.4446,35.9653],[79.4536,35.8793],[79.4916,35.8488],[79.5734,35.8921],[79.5734,35.8101],[79.638,35.775],[79.7059,35.6383],[79.8224,35.6225],[79.8487,35.5749],[79.9558,35.6333],[80.0003,35.5989],[79.9682,35.5518],[80.0573,35.4225],[80.1799,35.5138],[80.1678,35.5554],[80.2065,35.5752],[80.3628,35.5265],[80.4117,35.4726],[80.4178,35.4371],[80.369,35.3879],[80.2842,35.3487],[80.28,35.2032],[80.1965,35.1135],[80.2333,34.9871],[80.187,34.9441],[80.2019,34.8895],[80.1361,34.8551],[80.0686,34.7598],[80.0688,34.7051],[79.948,34.6749],[79.8945,34.6943],[79.7857,34.6252],[79.8105,34.5272],[79.7786,34.4791],[79.6997,34.4834],[79.6188,34.4517],[79.5357,34.4733],[79.5092,34.4512],[79.6031,34.3039],[79.6053,34.2373],[79.4929,34.1866],[79.4816,34.1234],[79.4171,34.0975],[79.3971,33.9992],[79.1825,34.024],[79.0916,33.9911],[78.9923,34.0352],[78.8877,33.97],[79.0272,33.746],[79.0218,33.6781],[79.0909,33.6293],[78.9053,33.6055],[78.8884,33.5727],[78.9412,33.3797],[78.9639,33.3387],[79.0269,33.3201],[79.1085,33.1999],[79.152,33.182],[79.2185,33.2374],[79.3045,33.1907],[79.4086,33.1884],[79.332,32.9998],[79.3648,32.938],[79.4008,32.9406],[79.3916,32.9162],[79.4718,32.8776],[79.4817,32.7999],[79.5569,32.758],[79.5464,32.675],[79.4523,32.6031],[79.4127,32.5198],[79.3501,32.5291],[79.3309,32.5653],[79.275,32.5533],[79.2474,32.5167],[79.1308,32.4801],[79.0989,32.37],[79.012,32.3804],[78.9669,32.3363],[78.7798,32.4798],[78.7598,32.5711],[78.7795,32.617],[78.7396,32.6957],[78.6334,32.6426],[78.6326,32.605],[78.5155,32.6137],[78.3958,32.5291],[78.4722,32.4413],[78.4548,32.3852],[78.5099,32.3027],[78.4895,32.2749],[78.5966,32.1968],[78.6319,32.1257],[78.6828,32.114],[78.7355,32.004],[78.7789,31.9927],[78.7395,31.8414],[78.7025,31.8055],[78.7522,31.6799],[78.7988,31.6815],[78.8466,31.608],[78.7203,31.5081],[78.7967,31.4438],[78.7495,31.367],[78.7788,31.3119],[78.9002,31.2921],[78.9468,31.3657],[79.0185,31.3511],[79.0193,31.4269],[79.0994,31.4545],[79.1714,31.398],[79.1726,31.3621],[79.2352,31.3335],[79.2275,31.2599],[79.3008,31.2181],[79.3131,31.1475],[79.4134,31.1071],[79.4284,31.0226],[79.5085,31.0277],[79.5542,30.9564],[79.6037,30.94],[79.7538,31.0042],[79.8668,30.9713],[79.9325,30.88],[80.0087,30.8651],[80.1131,30.7796],[80.1748,30.8084],[80.213,30.7527],[80.2394,30.76],[80.2485,30.7198],[80.1926,30.6654],[80.2197,30.5793],[80.3165,30.5633],[80.3479,30.5211],[80.4176,30.5226],[80.5443,30.4486],[80.6067,30.4712],[80.7348,30.399],[80.8035,30.3234],[81.0304,30.246],[81.0446,30.2059],[80.9969,30.186],[80.9329,30.1772],[80.9099,30.2232],[80.8627,30.1692],[80.8775,30.1285],[80.7609,30.0492],[80.7467,30.0059],[80.6737,29.9573],[80.6027,29.9584],[80.4933,29.7957],[80.4344,29.806],[80.3656,29.7474],[80.4202,29.6391],[80.4077,29.595],[80.3425,29.5528],[80.3492,29.5186],[80.2865,29.4764],[80.3018,29.4529],[80.2429,29.4433],[80.317,29.3141],[80.2971,29.205],[80.2475,29.2207],[80.271,29.1418],[80.2317,29.1186],[80.1826,29.1368],[80.1285,29.0612],[80.1267,29.0061],[80.0648,28.8376],[80.1181,28.829],[80.2579,28.753],[80.361,28.6344],[80.4536,28.6271],[80.5173,28.5518],[80.5063,28.6712],[80.5904,28.68],[80.6062,28.6525],[80.6708,28.6281],[80.7995,28.5213],[80.8616,28.5044],[80.9001,28.5011],[80.9142,28.4684],[80.9776,28.4423],[81.0129,28.4382],[81.0357,28.4138],[81.2133,28.3585],[81.2382,28.2823],[81.3195,28.1934],[81.322,28.1342],[81.3714,28.1427],[81.3795,28.1759],[81.4469,28.1607],[81.4878,28.077],[81.7077,27.9808],[81.8862,27.8567],[81.9261,27.8621],[81.9787,27.9286],[82.0804,27.9089],[82.4732,27.6764],[82.7083,27.7224],[82.758,27.5856],[82.7357,27.5023],[82.9396,27.4911],[83.0506,27.45],[83.1959,27.4465],[83.3174,27.3301],[83.4094,27.4148],[83.3962,27.4794],[83.6296,27.463],[83.8658,27.3491],[83.8843,27.3779],[83.8331,27.426],[83.8489,27.4462],[84.024,27.4326],[84.0981,27.5173],[84.1508,27.5169],[84.1488,27.486],[84.206,27.4699],[84.2086,27.4425],[84.2542,27.4534],[84.2921,27.385],[84.6223,27.3365],[84.6885,27.2206],[84.6506,27.0433],[84.7932,26.9959],[84.8276,27.0199],[84.8918,26.9697],[84.9626,26.9605],[84.9823,26.9145],[85.0526,26.889],[85.0271,26.854],[85.1918,26.8689],[85.177,26.8092],[85.2125,26.7581],[85.3546,26.76],[85.6344,26.8723],[85.7286,26.8027],[85.734,26.6508],[85.8579,26.5899],[85.8517,26.568],[85.9472,26.6131],[85.9585,26.6513],[86.027,26.6668],[86.2175,26.5886],[86.3435,26.6168],[86.7307,26.4227],[86.7658,26.4593],[86.8336,26.439],[86.8938,26.4621],[86.9328,26.5174],[87.02,26.5403],[87.0716,26.5854],[87.0944,26.4482],[87.1657,26.4038],[87.2661,26.4057],[87.2708,26.3729],[87.3475,26.3516],[87.376,26.4071],[87.48,26.4377],[87.6072,26.3813],[87.6921,26.4358],[87.7672,26.4107],[87.7934,26.4686],[87.8508,26.4454],[87.9,26.4774],[87.9271,26.4175],[88.0292,26.3648],[88.0906,26.4262],[88.0968,26.5358],[88.187,26.75],[88.1735,26.8656],[88.1203,26.9506],[88.1353,26.9851],[88.0372,27.0369],[87.9873,27.1195],[88.0665,27.336],[88.0417,27.3723],[88.0747,27.4323],[88.0437,27.4961],[88.197,27.7911],[88.1731,27.8206],[88.196,27.854],[88.1184,27.919],[88.1441,27.9648],[88.2071,27.9422],[88.2383,27.9681],[88.2515,27.9417],[88.3412,27.9857],[88.4136,27.9815],[88.4967,28.0547],[88.5469,28.035],[88.5556,28.0829],[88.6375,28.1179],[88.6737,28.0733],[88.7559,28.0789],[88.8365,28.0146],[88.8373,27.9273],[88.8677,27.9186],[88.8875,27.8559],[88.858,27.8142],[88.8478,27.6674],[88.765,27.5647],[88.8068,27.4054],[88.9214,27.3273],[88.9144,27.29],[88.8025,27.2474],[88.7459,27.1419],[88.8717,27.1086],[88.8771,26.9446],[88.924,26.9918],[88.9475,26.9325],[89.0244,26.9345],[89.095,26.8879],[89.1439,26.81],[89.263,26.8149],[89.3803,26.8614],[89.4725,26.8027],[89.5578,26.8133],[89.6501,26.7768],[89.6268,26.7236],[89.7554,26.7334],[89.7828,26.7043],[89.8606,26.7036],[89.8697,26.7347],[90.0547,26.7317],[90.1924,26.7816],[90.2394,26.8591],[90.3079,26.8527],[90.3641,26.9014],[90.4243,26.9001],[90.5562,26.8134],[90.7252,26.7719],[91.0604,26.7897],[91.1063,26.8198],[91.3443,26.7835],[91.4142,26.8353],[91.5024,26.7925],[91.6968,26.81],[91.901,26.9165],[92.0663,26.851],[92.102,26.8737],[92.121,26.9614],[92.0312,27.0806],[92.0274,27.1687],[92.0716,27.2355],[92.038,27.259],[92.1232,27.2867],[92.065,27.328],[92.0165,27.4804],[91.7673,27.465],[91.6937,27.5055],[91.6518,27.4836],[91.5658,27.5839],[91.5842,27.6087],[91.5623,27.6322],[91.6293,27.7003],[91.6538,27.7611],[91.8477,27.7611],[91.8737,27.7219],[91.9248,27.717],[91.9837,27.7775],[92.057,27.7801],[92.2441,27.8881],[92.2935,27.8718],[92.3247,27.7973],[92.4257,27.8337],[92.4567,27.799],[92.7322,27.9827],[92.7259,28.0579],[92.6567,28.0855],[92.6846,28.1503],[92.924,28.203],[92.9519,28.262],[93.1492,28.367],[93.1924,28.494],[93.4264,28.662],[93.6238,28.6853],[93.6428,28.6573],[93.7162,28.6665],[93.7914,28.7373],[93.9182,28.7435],[93.9152,28.7755],[93.9785,28.8185],[94.0201,28.7953],[94.0334,28.8563],[94.1851,28.9352],[94.2624,28.9341],[94.3639,29.0305],[94.2745,29.0997],[94.3005,29.1519],[94.5467,29.2245],[94.6293,29.296],[94.7013,29.3113],[94.757,29.2264],[94.8018,29.2068],[94.8097,29.1649],[94.8933,29.1767],[95.0196,29.1269],[94.9979,29.1723],[95.0992,29.1344],[95.1107,29.0969],[95.2183,29.1051],[95.2687,29.0711],[95.3056,29.1384],[95.4134,29.1328],[95.4357,29.1927],[95.4637,29.1349],[95.5095,29.1264],[95.5062,29.1949],[95.6016,29.1913],[95.6121,29.2348],[95.7161,29.2118],[95.7376,29.2273],[95.7407,29.3026],[95.8188,29.3489],[95.8801,29.3183],[95.9711,29.3734],[96.0576,29.3809],[96.3024,29.1918],[96.2856,29.1302],[96.2005,29.0973],[96.2141,29.0684],[96.1895,29.0363],[96.3309,29.1123],[96.3644,29.0421],[96.4442,28.9949],[96.4488,28.9401],[96.5218,28.9386],[96.523,28.8621],[96.5889,28.8194],[96.5734,28.7833],[96.6318,28.7336],[96.6411,28.6798],[96.5447,28.6873],[96.5138,28.5823],[96.4754,28.5733],[96.4645,28.5228],[96.4071,28.5054],[96.4751,28.4948],[96.4988,28.4294],[96.4938,28.5424],[96.6143,28.6205],[96.6876,28.59],[96.712,28.6113],[96.7602,28.5193],[96.8607,28.4828],[96.9262,28.3523],[97.0025,28.3259],[97.079,28.3706],[97.1264,28.3619],[97.2845,28.2315],[97.3612,28.2034],[97.3141,28.0612],[97.3592,28.0628],[97.3947,28.0108],[97.3646,27.9598],[97.3602,27.8732],[97.2946,27.9151],[97.2454,27.8984],[97.0864,27.7336],[97.0318,27.7483],[96.9819,27.6657],[96.9345,27.6602],[96.8895,27.6045],[96.9345,27.5082],[96.9045,27.4512],[97.1643,27.1392],[97.1357,27.094],[97.0624,27.0928],[96.9826,27.1548],[96.8668,27.1859],[96.8824,27.2601],[96.7956,27.3459],[96.7037,27.3723],[96.6051,27.3654],[96.5227,27.2866],[96.4404,27.3062],[96.2279,27.2783],[96.0223,27.1797],[95.9441,27.0514],[95.8014,27.0139],[95.7198,26.8803],[95.6668,26.9027],[95.6073,26.8129],[95.5242,26.8219],[95.4291,26.6998],[95.3026,26.6508],[95.2336,26.6817],[95.1488,26.6156],[95.1531,26.582],[95.0626,26.4481],[95.1322,26.3774],[95.1181,26.1006],[95.1838,26.0699],[95.0121,25.897],[95.048,25.7587],[94.9349,25.6659],[94.8816,25.5899],[94.898,25.5655],[94.8448,25.5605],[94.7827,25.4805],[94.6833,25.466],[94.6345,25.3946],[94.5768,25.2128],[94.7408,25.1253],[94.7432,25.0359],[94.6972,24.9672],[94.713,24.9336],[94.6324,24.839],[94.6043,24.7121],[94.5421,24.7022],[94.4925,24.5875],[94.4498,24.553],[94.4122,24.4818],[94.399,24.4721],[94.4023,24.4261],[94.3219,24.3054],[94.1564,23.8479],[94.1259,23.8335],[94.0958,23.8893],[93.9294,23.95],[93.8071,23.9271],[93.7541,24.0056],[93.6224,24.0106],[93.5917,23.9607],[93.5589,23.9817],[93.5047,23.9427],[93.4139,24.0742],[93.3484,24.105],[93.3284,24.0808],[93.3297,23.9844],[93.3939,23.9222],[93.3924,23.7558],[93.4361,23.6856],[93.3877,23.445],[93.4013,23.3838],[93.3553,23.3522],[93.3851,23.134],[93.293,23.0065],[93.228,23.0123],[93.1837,23.0596],[93.1262,23.0429],[93.1641,22.9104],[93.1303,22.9057],[93.0943,22.8055],[93.0957,22.6716],[93.1402,22.5906],[93.1068,22.526],[93.1856,22.425],[93.2018,22.2634],[93.1413,22.2445],[93.1502,22.1763],[93.1104,22.2042],[93.0377,22.1952],[93.0588,22.101],[93.0043,22.104],[93.0019,21.9832],[92.9507,22.0295],[92.9059,21.9414],[92.8624,22.0631],[92.6992,22.1551],[92.6785,22.0112],[92.6025,21.9783],[92.601,22.062],[92.5623,22.1283],[92.6064,22.1241],[92.609,22.1647],[92.5218,22.5603],[92.5168,22.7223],[92.4741,22.7469],[92.4496,22.8941],[92.3714,22.9365],[92.3924,23.0564],[92.3582,23.1034],[92.3535,23.2365],[92.4042,23.2411],[92.3169,23.4717],[92.2799,23.7195],[92.2411,23.7202],[92.2137,23.6524],[92.2029,23.7059],[92.1479,23.7354],[92.0466,23.6459],[91.9567,23.7335],[91.9347,23.6838],[91.9702,23.4782],[91.9371,23.4663],[91.9427,23.4352],[91.8451,23.4054],[91.762,23.3],[91.8356,23.0922],[91.7741,23.0692],[91.78,23.0288],[91.7201,22.9874],[91.6452,22.9847],[91.6183,22.9373],[91.5428,23.0007],[91.4914,23.1584],[91.5058,23.1843],[91.4505,23.2196],[91.4524,23.2603],[91.4183,23.2558],[91.4089,23.2838],[91.3814,23.2085],[91.4172,23.0645],[91.347,23.1042],[91.2903,23.3198],[91.3149,23.3611],[91.2915,23.3519],[91.2486,23.4903],[91.2007,23.5231],[91.2106,23.5492],[91.1596,23.6112],[91.1568,23.6708],[91.1999,23.6475],[91.2057,23.686],[91.1534,23.6893],[91.1585,23.7419],[91.2195,23.7379],[91.2541,23.8381],[91.2339,23.9283],[91.276,23.9238],[91.304,23.9983],[91.3793,23.9755],[91.3745,24.1075],[91.5863,24.0736],[91.6382,24.1044],[91.6659,24.2335],[91.6882,24.1622],[91.7614,24.1484],[91.7499,24.2444],[91.8202,24.2093],[91.8506,24.2236],[91.8454,24.1913],[91.9029,24.1375],[91.9392,24.2729],[91.9201,24.3371],[91.9576,24.3562],[91.9958,24.3222],[91.9709,24.3853],[92.0974,24.3726],[92.1367,24.4252],[92.164,24.4188],[92.1546,24.5234],[92.2238,24.5176],[92.2546,24.6781],[92.2964,24.7369],[92.2323,24.9004],[92.3015,24.9151],[92.4006,24.8486],[92.498,24.8766],[92.4884,24.9487],[92.4188,24.9669],[92.4251,25.0304],[92.2271,25.0935],[92.2073,25.113],[92.2272,25.1175],[92.0597,25.1866],[91.7511,25.1757],[91.7466,25.1405],[91.7029,25.1589],[91.6364,25.1229],[91.6004,25.1464],[91.6124,25.1763],[91.4689,25.1345],[91.267,25.2065],[90.8617,25.1577],[90.7802,25.1862],[90.7327,25.1553],[90.666,25.1659],[90.6629,25.1973],[90.4389,25.1455],[90.3281,25.1936],[90.114,25.2252],[89.9641,25.3025],[89.8375,25.2946],[89.8199,25.3825],[89.8816,25.6195],[89.8166,25.8163],[89.8867,25.9454],[89.8252,25.9462],[89.871,25.9812],[89.8348,26.0108],[89.8192,25.9884],[89.8081,26.0437],[89.7902,26.0178],[89.8016,26.0404],[89.7736,26.038],[89.794,26.0887],[89.7461,26.1584],[89.6813,26.164],[89.7009,26.1736],[89.6791,26.2384],[89.634,26.2283],[89.6485,26.1645],[89.609,26.1806],[89.5909,26.157],[89.6301,26.118],[89.5966,26.0982],[89.6302,26.107],[89.65,26.0624],[89.6048,26.0631],[89.5772,25.9689],[89.5395,25.9709],[89.5402,26.006],[89.4302,26.0115],[89.4229,26.0475],[89.3561,26.0078],[89.2541,26.0651],[89.2665,26.094],[89.2297,26.1239],[89.1553,26.1384],[89.1408,26.236],[89.1005,26.2799],[89.1061,26.3158],[89.1228,26.2866],[89.1352,26.3204],[89.0843,26.3223],[89.0872,26.3978],[88.9937,26.4134],[88.9565,26.4596],[88.9047,26.4083],[88.919,26.3594],[88.9585,26.3604],[88.9526,26.3317],[88.9872,26.3481],[88.9963,26.2901],[89.0602,26.293],[89.0489,26.2421],[88.9568,26.241],[88.8976,26.2886],[88.8616,26.273],[88.8777,26.2334],[88.8408,26.2313],[88.793,26.3096],[88.6661,26.2633],[88.6687,26.2974],[88.7087,26.2884],[88.676,26.3202],[88.7467,26.324],[88.7452,26.3479],[88.7026,26.3347],[88.681,26.38],[88.7018,26.3888],[88.6232,26.4383],[88.6224,26.471],[88.5598,26.4576],[88.4846,26.5413],[88.4344,26.5466],[88.3987,26.6255],[88.3319,26.4819],[88.3532,26.4477],[88.373,26.4881],[88.4849,26.4601],[88.5239,26.359],[88.4575,26.3759],[88.3495,26.2822],[88.35,26.2203],[88.1768,26.1477],[88.1575,26.0792],[88.1842,26.0724],[88.1828,26.0237],[88.1394,26.013],[88.0857,25.9166],[88.108,25.8147],[88.1514,25.7757],[88.2697,25.808],[88.267,25.7823],[88.4028,25.6724],[88.4535,25.6641],[88.4446,25.597],[88.4999,25.5837],[88.5406,25.5084],[88.609,25.5159],[88.6995,25.4713],[88.7078,25.5],[88.7687,25.4992],[88.7605,25.5258],[88.8105,25.5232],[88.8429,25.3639],[88.9298,25.3042],[89.0092,25.3014],[89.0082,25.2644],[88.9558,25.2546],[88.9612,25.2084],[88.9366,25.21],[88.9482,25.1773],[88.9224,25.1653],[88.8435,25.2139],[88.8051,25.1706],[88.7112,25.2077],[88.5654,25.1752],[88.4411,25.21],[88.4525,25.0367],[88.3989,24.9452],[88.3401,24.9399],[88.3295,24.8702],[88.276,24.8977],[88.2575,24.8784],[88.2235,24.9619],[88.1383,24.9352],[88.1747,24.8602],[88.0711,24.7679],[88.01,24.6667],[88.1656,24.4985],[88.3354,24.3808],[88.4459,24.3785],[88.5275,24.343],[88.5555,24.2946],[88.5718,24.3269],[88.6989,24.3136],[88.7369,24.2749],[88.7453,24.1465],[88.6998,24.1193],[88.7426,24.0546],[88.7291,23.994],[88.7581,24.0069],[88.7693,23.9818],[88.7376,23.9829],[88.7322,23.911],[88.6672,23.8697],[88.5755,23.8618],[88.602,23.8167],[88.5564,23.7845],[88.5809,23.7604],[88.5585,23.6491],[88.5935,23.6388],[88.5808,23.6027],[88.646,23.609],[88.654,23.5561],[88.7425,23.4809],[88.8002,23.497],[88.7951,23.4431],[88.7644,23.4475],[88.7495,23.3998],[88.7647,23.3664],[88.732,23.3519],[88.7453,23.3075],[88.6962,23.3019],[88.7191,23.2549],[88.7902,23.2185],[88.8118,23.2562],[88.9428,23.2066],[88.9959,23.2148],[88.8687,23.1009],[88.8798,23.0064],[88.8451,23.0087],[88.8599,22.9423],[88.8943,22.9521],[88.9095,22.8798],[88.9686,22.8447],[88.9115,22.7572],[88.9623,22.6943],[88.9291,22.6469],[88.9602,22.6139],[88.9387,22.5583],[88.9963,22.4679],[88.9851,22.3253],[89.0242,22.295],[88.9967,22.2851],[89.0712,22.1954],[89.0724,22.1477],[89.0979,22.1537],[89.0398,22.1007],[89.0433,22.0445],[89.0769,21.9899],[89.0617,21.9332],[89.0029,21.9457],[89.0171,21.9748],[88.9946,21.945],[89.0161,21.8986],[88.9858,21.8908],[89.0328,21.8598],[89.0033,21.8078],[89.0908,21.6278],[89.0558,21.6128],[89.0178,21.6582],[89.0413,21.6124],[89.0012,21.6024],[88.9537,21.6225],[88.9379,21.665],[88.9158,21.6354],[88.8392,21.7771],[88.8671,21.7517],[88.845,21.6162],[88.8096,21.635],[88.8166,21.6845],[88.7942,21.6546],[88.7162,21.6842],[88.7029,21.8617],[88.7283,21.9762],[88.7587,21.9708],[88.7783,22.0153],[88.7523,22.0753],[88.6853,22.0607],[88.7361,22.0266],[88.7149,22.0061],[88.6628,22.0224],[88.6382,22.0753],[88.6133,22.0178],[88.5986,22.0274],[88.6179,21.9316],[88.5779,21.97],[88.6129,21.9158],[88.5825,21.8888],[88.5704,21.9058],[88.5525,21.8154],[88.5509,21.8771],[88.5266,21.8521],[88.4996,21.885],[88.5125,21.9496],[88.4579,21.895],[88.4904,21.84],[88.4488,21.8066],[88.4771,21.7867],[88.4475,21.6112],[88.4229,21.7175],[88.4292,21.6154],[88.3962,21.5941],[88.3804,21.6758],[88.4008,21.7213],[88.3646,21.73],[88.3962,21.71],[88.3658,21.6838],[88.3391,21.7213],[88.2913,21.7092],[88.2737,21.7325],[88.3096,21.6666],[88.2875,21.5971],[88.3079,21.575],[88.2454,21.5624],[88.1562,21.9592],[88.2245,22.0841],[88.207,22.1524],[88.1791,22.1895],[88.0184,22.222],[88.137,22.1808],[88.1879,22.0991],[88.0491,22.0145],[87.9687,21.8491],[87.8933,21.7929],[87.8746,21.8158],[87.8738,21.7649],[87.8008,21.6954],[87.3808,21.5713],[87.3471,21.5808],[87.3725,21.5504],[87.1867,21.5537],[87.1242,21.5129],[87.0921,21.535],[87.1033,21.4963],[87.0392,21.4771],[87.0508,21.4596],[86.9146,21.3358],[86.8337,21.2083],[86.8283,21.1362],[86.9737,20.8192],[86.9616,20.7821],[86.8871,20.7966],[86.8691,20.7729],[86.9979,20.7675],[87.0025,20.7121],[86.9256,20.7074],[86.9717,20.6946],[87.0679,20.7175],[86.7667,20.5029],[86.7312,20.5341],[86.7571,20.4975],[86.7442,20.4688],[86.7158,20.4779],[86.7379,20.4742],[86.7337,20.4116],[86.7096,20.4058],[86.7862,20.3733],[86.7649,20.3271],[86.6766,20.2921],[86.7962,20.3441],[86.5188,20.1825],[86.5483,20.1854],[86.42,20.0012],[86.3804,19.9658],[86.3771,19.9908],[86.3145,19.9861],[86.3683,19.9504],[85.5396,19.6941],[85.5875,19.6996],[85.3383,19.5771],[85.0816,19.3771],[85.0379,19.385],[85.0775,19.3712],[84.9166,19.2596],[84.9087,19.2741],[84.7934,19.1162],[84.7438,19.1134],[84.7471,19.0758],[84.7871,19.1067],[84.5533,18.7854],[84.3604,18.5675],[84.3366,18.5754],[84.3117,18.5338],[84.3533,18.5487],[84.1362,18.3516],[84.1003,18.3492],[84.1312,18.3317],[84.1225,18.3062],[83.95,18.2138],[83.9245,18.2266],[83.9375,18.2095],[83.6663,18.0866],[83.5733,18.0138],[83.5571,18.0217],[83.5338,17.9541],[83.4546,17.9016],[83.4579,17.9183],[83.4084,17.8046],[83.2108,17.5879],[82.5949,17.2787],[82.3063,17.0375],[82.2521,16.8775],[82.3571,16.85],[82.3596,16.8275],[82.3613,16.9442],[82.3383,16.9887],[82.3704,16.9083],[82.3418,16.7362],[82.2689,16.7044],[82.3402,16.711],[82.3361,16.6891],[82.3654,16.7191],[82.349,16.7294],[82.3679,16.712],[82.3079,16.5991],[82.2582,16.6847],[82.2996,16.5833],[82.2629,16.5583],[82.2999,16.5571],[82.0396,16.4608],[81.9616,16.3971],[81.9612,16.4341],[81.9475,16.3929],[81.7175,16.3087],[81.7171,16.3624],[81.7066,16.3062],[81.5412,16.35],[81.5527,16.3714],[81.2671,16.2908],[81.1983,16.1704],[81.1475,15.9687],[81.1262,15.9891],[81.1308,15.9587],[80.9971,15.8208],[81.03,15.7596],[80.9808,15.7729],[81.0075,15.7512],[80.9579,15.7567],[80.9658,15.7279],[80.9341,15.7104],[80.8956,15.7542],[80.9166,15.7154],[80.8304,15.7025],[80.834,15.7526],[80.812,15.7475],[80.7846,15.8183],[80.787,15.8516],[80.8112,15.7808],[80.7966,15.8512],[80.6762,15.8883],[80.5221,15.8558],[80.2637,15.6692],[80.2288,15.535],[80.1958,15.5013],[80.2029,15.4666],[80.1012,15.3183],[80.0488,15.0733],[80.0808,14.8062],[80.1854,14.5958],[80.1433,14.5654],[80.1962,14.5725],[80.1662,14.3359],[80.1363,14.245],[80.1038,14.2508],[80.1362,14.2359],[80.1292,14.0638],[80.2554,13.7759],[80.2371,13.6433],[80.3291,13.3871],[80.3279,13.4375],[80.3454,13.2825],[80.3258,13.2312],[80.3146,13.2383],[80.3037,13.0891],[80.2641,13.0096],[80.2492,12.8029],[80.2329,12.8416],[80.2333,12.7837],[80.2554,12.78],[80.1546,12.4608],[80.1308,12.4321],[80.1146,12.4508],[80.1279,12.4225],[79.9741,12.2279],[79.8696,12.0333],[79.7588,11.6683],[79.7796,11.6992],[79.7666,11.4845],[79.7821,11.4941],[79.8321,11.3608],[79.7625,11.3779],[79.8388,11.35],[79.857,11.185],[79.8496,10.8342],[79.8283,10.8171],[79.8504,10.7941],[79.8779,10.3041],[79.7929,10.2742],[79.7925,10.3037],[79.6621,10.3458],[79.6554,10.3241],[79.6338,10.3608],[79.5766,10.312],[79.565,10.3321],[79.6008,10.3471],[79.5454,10.3466],[79.5413,10.3258],[79.4587,10.3466],[79.5192,10.3121],[79.3916,10.3196],[79.2762,10.2425],[79.2304,10.1379],[79.2633,10.0371],[78.9946,9.71],[78.9004,9.4825],[78.9996,9.3458],[78.9692,9.3354],[79.1842,9.2796],[78.8595,9.2483],[78.6633,9.1871],[78.6558,9.1521],[78.5808,9.1271],[78.4904,9.1358],[78.2654,9.0166],[78.1712,8.8791],[78.16,8.7521],[78.1259,8.7612],[78.1646,8.7525],[78.1992,8.7879],[78.1988,8.7608],[78.1108,8.6379],[78.1363,8.5966],[78.1179,8.5875],[78.1396,8.5866],[78.1304,8.4933],[78.0441,8.3812],[78.0683,8.3729],[77.8034,8.2362],[77.745,8.1754],[77.5758,8.1296],[77.5483,8.0737],[77.3108,8.1296],[77.0104,8.3525],[76.6354,8.83],[76.5454,8.9041],[76.5458,8.9321],[76.5696,8.9158],[76.6025,8.9362],[76.5729,8.9274],[76.6008,8.9712],[76.6667,8.9587],[76.635,8.9821],[76.6616,8.9946],[76.5854,8.9916],[76.5387,8.9383],[76.4608,9.1387],[76.4879,9.1158],[76.4921,9.1683],[76.4712,9.1449],[76.4237,9.245],[76.4521,9.1533],[76.3462,9.3959],[76.2362,9.9641],[76.2769,9.9314],[76.2591,9.9721],[76.2887,9.9483],[76.2692,10.0338],[76.2304,10.0142],[76.2408,9.9729],[76.2196,10.0],[76.17,10.1821],[76.2041,10.1979],[76.1554,10.1875],[76.0338,10.5283],[76.0625,10.5454],[76.0279,10.53],[75.9196,10.78],[75.9596,10.8134],[75.9154,10.795],[75.9096,10.8225],[75.9121,10.7875],[75.8262,11.1208],[75.8679,11.1275],[75.8246,11.125],[75.8079,11.1608],[75.825,11.1804],[75.8004,11.1733],[75.7829,11.2249],[75.7984,11.2337],[75.7779,11.23],[75.7354,11.3425],[75.7558,11.3621],[75.7329,11.35],[75.6816,11.4471],[75.6204,11.4784],[75.5408,11.7129],[75.4979,11.7367],[75.485,11.7804],[75.4571,11.775],[75.4617,11.8046],[75.4496,11.7816],[75.3554,11.8642],[75.3004,11.9466],[75.3446,11.935],[75.3133,11.9704],[75.2796,11.9942],[75.2862,11.9575],[75.23,12.0221],[75.2004,12.0058],[75.13,12.2129],[74.8254,12.8391],[74.8666,12.8412],[74.8321,12.85],[74.8138,12.9041],[74.8221,12.8533],[74.6958,13.3454],[74.6921,13.445],[74.7112,13.4125],[74.7175,13.4546],[74.6888,13.4691],[74.6683,13.6337],[74.6804,13.6058],[74.6808,13.6337],[74.7212,13.64],[74.6795,13.65],[74.6758,13.6796],[74.6646,13.6366],[74.6504,13.6667],[74.5858,13.9229],[74.5129,13.9934],[74.505,14.0246],[74.5275,14.0221],[74.502,14.0408],[74.4271,14.2775],[74.5125,14.2454],[74.4395,14.2759],[74.4271,14.3067],[74.4195,14.2941],[74.4058,14.4196],[74.382,14.42],[74.35,14.5029],[74.3816,14.5404],[74.3679,14.5583],[74.35,14.5171],[74.3104,14.52],[74.2933,14.5946],[74.3479,14.605],[74.2879,14.5983],[74.2679,14.6258],[74.2933,14.6379],[74.2608,14.7079],[74.2833,14.7129],[74.23,14.7446],[74.2041,14.7154],[74.1162,14.7733],[74.0933,14.8021],[74.1246,14.8058],[74.1279,14.8367],[74.1654,14.8216],[74.1621,14.86],[74.1154,14.8417],[74.0924,14.8962],[74.0412,14.9199],[74.0483,14.9871],[73.9141,15.0854],[73.955,15.1579],[73.8945,15.3325],[73.7846,15.4108],[73.8775,15.397],[73.8833,15.4296],[73.7887,15.4608],[73.8245,15.5066],[73.7671,15.4933],[73.7337,15.5916],[73.7874,15.6538],[73.7312,15.62],[73.6913,15.7158],[73.7133,15.7321],[73.6529,15.7408],[73.6746,15.755],[73.665,15.8087],[73.6113,15.8625],[73.6266,15.8712],[73.5962,15.9208],[73.5113,15.94],[73.4571,16.055],[73.4525,16.2129],[73.4304,16.2008],[73.4137,16.2733],[73.4341,16.2838],[73.4087,16.2792],[73.3854,16.3392],[73.4241,16.3721],[73.3704,16.3825],[73.4658,16.4154],[73.3671,16.3967],[73.36,16.4412],[73.3866,16.4496],[73.3512,16.445],[73.3171,16.5125],[73.3379,16.5592],[73.3629,16.4833],[73.375,16.5096],[73.4416,16.5021],[73.3592,16.5287],[73.3541,16.5545],[73.4083,16.5588],[73.3571,16.555],[73.3187,16.6],[73.3554,16.5958],[73.3754,16.6267],[73.4013,16.59],[73.4009,16.6171],[73.3329,16.6208],[73.3433,16.6937],[73.3187,16.7],[73.3062,16.765],[73.3283,16.8096],[73.3463,16.7916],[73.3442,16.8312],[73.297,16.8133],[73.2916,16.8829],[73.3141,16.8871],[73.2779,16.8933],[73.2967,16.9804],[73.3316,16.9446],[73.33,16.9696],[73.2704,16.99],[73.2854,17.0117],[73.2583,17.0487],[73.2883,16.9988],[73.2933,17.0354],[73.3241,17.0404],[73.2813,17.0408],[73.315,17.0854],[73.2871,17.0825],[73.2337,17.1983],[73.245,17.2229],[73.1929,17.2991],[73.2641,17.2579],[73.2641,17.2862],[73.2974,17.2937],[73.2404,17.295],[73.2108,17.3821],[73.1712,17.4042],[73.2125,17.4346],[73.1896,17.4483],[73.1899,17.5112],[73.1413,17.5608],[73.2158,17.5912],[73.1679,17.5824],[73.1379,17.6133],[73.1171,17.6808],[73.1362,17.7142],[73.0916,17.8371],[73.1283,17.8354],[73.087,17.8458],[73.08,17.8996],[73.0537,17.9042],[73.0908,17.9404],[73.0312,17.9516],[73.0883,17.9904],[73.02,17.9921],[73.0092,18.0212],[73.0399,18.0521],[73.0171,18.0283],[72.9921,18.0592],[72.9883,18.1929],[72.9329,18.2191],[72.9375,18.2812],[72.9687,18.2758],[72.9841,18.2412],[73.0729,18.2175],[73.0683,18.1737],[73.1029,18.1458],[73.0629,18.1933],[73.0766,18.2396],[73.0454,18.3008],[73.0846,18.3217],[73.0275,18.2671],[72.9204,18.35],[72.9092,18.5404],[72.967,18.5333],[73.0054,18.4675],[72.9625,18.5429],[72.9246,18.5433],[72.8571,18.6967],[72.87,18.8037],[72.9175,18.7937],[72.9425,18.8254],[73.0142,18.7171],[72.9788,18.8016],[73.0117,18.8037],[72.9846,18.8158],[72.9775,18.8596],[72.9267,18.8504],[72.9096,18.8992],[72.9479,18.8934],[72.9516,18.9471],[72.9866,18.9445],[72.9583,18.9704],[73.065,19.0229],[73.0013,19.0067],[72.9833,19.1862],[72.9308,19.0871],[72.9567,19.0362],[72.9124,18.9971],[72.8629,19.0025],[72.8046,18.8966],[72.8221,18.9375],[72.7946,18.9516],[72.8379,19.045],[72.8096,19.1475],[72.83,19.1812],[72.7941,19.1287],[72.7837,19.16],[72.84,19.2554],[72.7821,19.1933],[72.7879,19.3083],[72.905,19.2912],[72.8525,19.3504],[72.8075,19.3262],[72.7771,19.355],[72.7462,19.4642],[72.8875,19.5254],[72.8429,19.5391],[72.7787,19.505],[72.7854,19.5208],[72.7271,19.5375],[72.7175,19.5929],[72.745,19.5996],[72.7033,19.7262],[72.7121,19.7408],[72.6554,19.8391],[72.6883,19.8662],[72.6725,19.9362],[72.715,19.9687],[72.7462,19.9425],[72.7087,20.0725],[72.7533,20.2029],[72.7817,20.2121],[72.7463,20.2183],[72.7554,20.2925],[72.8367,20.3729],[72.8337,20.4458],[72.8991,20.5312],[72.8908,20.6287],[72.9116,20.6379],[72.8846,20.6408],[72.8467,20.7437],[72.93,20.7604],[72.8504,20.7592],[72.8529,20.8217],[72.8296,20.7992],[72.7841,20.9204],[72.8246,20.915],[72.8283,20.9496],[72.8646,20.9483],[72.8329,20.9608],[72.8491,20.9721],[72.7571,20.93],[72.7338,21.0],[72.7325,21.0537],[72.8487,21.0333],[72.7988,21.0541],[72.825,21.0921],[72.7633,21.0654],[72.7063,21.0916],[72.7141,21.1354],[72.7808,21.1804],[72.7208,21.1437],[72.6746,21.1558],[72.6354,21.0842],[72.6433,21.2112],[72.7391,21.1979],[72.6387,21.2375],[72.645,21.2679],[72.6204,21.275],[72.6384,21.2988],[72.5987,21.2991],[72.6346,21.3225],[72.6309,21.3429],[72.6858,21.3554],[72.6596,21.3483],[72.6471,21.3883],[72.7008,21.4637],[72.7627,21.4485],[72.7258,21.477],[72.645,21.4487],[72.6867,21.5079],[72.8296,21.6183],[72.8392,21.6688],[72.9258,21.6779],[72.5316,21.6679],[72.6208,21.9071],[72.6567,21.9487],[72.7192,21.9404],[72.7487,21.975],[72.7271,21.9825],[72.7175,21.952],[72.6458,21.9629],[72.535,21.8962],[72.5108,21.9779],[72.5891,22.2054],[72.6467,22.2154],[72.7637,22.1808],[72.8233,22.2588],[72.876,22.231],[72.9108,22.2662],[72.8383,22.2804],[72.7475,22.232],[72.5337,22.3033],[72.4292,22.2062],[72.3766,22.3387],[72.3513,22.2892],[72.3262,22.3041],[72.3254,22.2434],[72.2829,22.2433],[72.2904,22.0941],[72.2325,22.0121],[72.1829,22.0208],[72.2387,21.995],[72.245,21.9237],[72.1637,21.9566],[72.2496,21.9083],[72.2474,21.8079],[72.2138,21.8558],[72.1684,21.8096],[72.2138,21.7925],[72.3054,21.6259],[72.2342,21.4521],[72.1083,21.3004],[72.0887,21.3133],[72.1129,21.29],[72.0837,21.245],[72.1083,21.1971],[72.0075,21.1346],[71.8946,21.1103],[71.7913,21.0513],[71.7779,21.0613],[71.8066,21.0367],[71.7646,21.0638],[71.7446,21.0322],[71.7774,21.0351],[71.7608,21.0201],[71.5129,20.9533],[71.44,20.8679],[71.3691,20.8671],[71.1433,20.7571],[71.0854,20.7683],[71.0699,20.7329],[70.9721,20.7267],[70.9979,20.7108],[70.9792,20.7004],[70.8971,20.6983],[70.875,20.7254],[70.8225,20.6921],[70.4475,20.8521],[70.1434,21.0679],[69.7771,21.4558],[69.8037,21.4591],[69.3879,21.81],[69.395,21.8537],[69.3492,21.8387],[69.2587,21.9166],[68.9729,22.2217],[68.9354,22.3133],[68.9854,22.4133],[69.0699,22.4787],[69.0383,22.3871],[69.1888,22.4149],[69.1579,22.3091],[69.2283,22.2571],[69.3237,22.2958],[69.3349,22.3279],[69.4841,22.3362],[69.5242,22.3704],[69.515,22.4246],[69.5512,22.3958],[69.555,22.3496],[69.5904,22.3617],[69.5746,22.3266],[69.5958,22.3495],[69.6129,22.3283],[69.6275,22.3612],[69.6679,22.3267],[69.6579,22.3833],[69.6987,22.4017],[69.73,22.4746],[69.7416,22.4287],[69.8137,22.4042],[69.8341,22.4496],[69.9029,22.4608],[69.9229,22.4399],[69.9092,22.4904],[69.9933,22.5454],[70.12,22.5496],[70.1142,22.5254],[70.1366,22.5521],[70.1754,22.5433],[70.1925,22.5804],[70.2162,22.5717],[70.2008,22.6029],[70.2566,22.6837],[70.2842,22.6779],[70.2604,22.7191],[70.3179,22.7625],[70.3612,22.895],[70.4466,22.9704],[70.3946,22.9791],[70.3875,22.9329],[70.3466,22.9229],[70.285,22.9471],[70.2337,22.9875],[70.2154,23.0525],[70.2125,22.9471],[70.1196,22.9624],[70.1304,22.9957],[70.1104,22.9592],[70.1387,22.9316],[70.0975,22.9079],[70.0038,22.9192],[69.8924,22.8721],[69.8842,22.9104],[69.8716,22.8662],[69.7838,22.8591],[69.7312,22.8167],[69.7125,22.7463],[69.6875,22.7579],[69.7066,22.7379],[69.6629,22.7692],[69.6583,22.7479],[69.6029,22.7766],[69.6108,22.7571],[69.5759,22.7604],[69.5683,22.7962],[69.445,22.7787],[69.3587,22.83],[69.3496,22.8692],[69.3483,22.8179],[69.3029,22.8316],[69.3229,22.84],[69.2304,22.835],[69.2246,22.8725],[69.225,22.8354],[69.1937,22.8383],[69.1212,22.8791],[69.1383,22.8962],[69.0671,22.9192],[69.072,22.9475],[69.0575,22.9212],[69.01,22.9496],[69.0137,22.9824],[68.9866,22.9571],[68.9746,22.9841],[68.9604,22.97],[68.6287,23.1724],[68.7182,23.1362],[68.5795,23.23],[68.6274,23.2187],[68.6066,23.2437],[68.6624,23.2729],[68.6316,23.2962],[68.6766,23.3021],[68.6337,23.3083],[68.6079,23.3666],[68.6174,23.3262],[68.5737,23.3499],[68.5724,23.3729],[68.5932,23.3712],[68.4979,23.4566],[68.5082,23.4937],[68.4487,23.4817],[68.4854,23.5242],[68.4537,23.5175],[68.4683,23.5504],[68.4254,23.5117],[68.4299,23.5604],[68.5533,23.7188],[68.8066,23.8805],[68.7712,23.8609],[68.762,23.8825],[68.7474,23.8471],[68.6587,23.8584],[68.6724,23.8421],[68.5787,23.8108],[68.5299,23.7521],[68.5153,23.7784],[68.5116,23.7454],[68.4616,23.7713],[68.4733,23.7404],[68.4313,23.7392],[68.452,23.78],[68.4278,23.8152],[68.3979,23.6342],[68.3699,23.6229],[68.3878,23.6033],[68.3424,23.5812],[68.2624,23.5579],[68.2875,23.5996],[68.2679,23.6217],[68.2466,23.5679],[68.1721,23.6225],[68.2687,23.6567],[68.3495,23.7317],[68.3187,23.7558],[68.3241,23.7304],[68.2695,23.7],[68.2612,23.735],[68.2408,23.6737],[68.1954,23.7367],[68.2083,23.8354],[68.2612,23.8375],[68.2836,23.9205],[68.3421,23.9236],[68.3596,23.9648],[68.3715,23.9424],[68.3843,23.9696],[68.7534,23.9745],[68.769,24.2975],[68.8141,24.3129],[68.8661,24.2122],[68.9482,24.2987],[69.008,24.2232],[69.0972,24.2735],[69.1991,24.2383],[69.3169,24.281],[69.4987,24.2681],[69.5978,24.2893],[69.7355,24.171],[70.0296,24.1727],[70.1155,24.2968],[70.5658,24.4216],[70.599,24.406],[70.5621,24.3526],[70.5767,24.2498],[70.7186,24.2157],[70.9086,24.2615],[70.8766,24.2985],[70.9509,24.3489],[71.042,24.3539],[71.1219,24.4057],[71.0987,24.4359],[70.9982,24.4489],[70.9884,24.6],[71.0892,24.696],[70.9348,24.9478],[70.8882,25.1484],[70.6656,25.3993],[70.6598,25.7023],[70.3813,25.675],[70.2628,25.7202],[70.0994,25.9403],[70.0958,26.0989],[70.1717,26.2643],[70.1685,26.5547],[70.0515,26.5997],[69.8115,26.5924],[69.5017,26.7631],[69.5157,27.0154],[69.5874,27.1838],[70.0268,27.5647],[70.1378,27.8119],[70.3788,28.0126],[70.5211,28.0327],[70.5921,28.0055],[70.6784,27.8988],[70.6968,27.8129],[70.7408,27.7412],[70.8833,27.7069],[71.2123,27.8364],[71.3917,27.8727],[71.6742,27.8807],[71.8987,27.9634],[71.9278,28.1223],[72.2118,28.4109],[72.302,28.6727],[72.3922,28.7716],[72.9476,29.0315],[73.2839,29.5809],[73.4035,29.9485],[73.8074,30.0689],[73.9716,30.2044],[73.9296,30.3214],[73.8809,30.3615],[73.9738,30.4442],[73.932,30.442],[73.9369,30.4888],[73.9643,30.4589],[74.0239,30.526],[74.074,30.5251],[74.0992,30.6142],[74.1954,30.6668],[74.2326,30.7245],[74.2818,30.7396],[74.2617,30.7751],[74.3023,30.7802],[74.323,30.8478],[74.38,30.8619],[74.3675,30.8943],[74.424,30.9097],[74.4177,30.9406],[74.5458,30.9944],[74.5704,31.0529],[74.6953,31.075],[74.6881,31.1279],[74.6013,31.1325],[74.6098,31.0982],[74.5707,31.0815],[74.5104,31.1321],[74.5522,31.365],[74.6024,31.42],[74.6546,31.4262],[74.6361,31.485],[74.5754,31.5011],[74.6131,31.5688],[74.4872,31.7167],[74.5595,31.7582],[74.6116,31.8906],[74.8203,31.9606],[74.8804,32.0534],[75.0167,32.0429],[75.1333,32.0808],[75.1759,32.0701],[75.2048,32.1201],[75.2409,32.0922],[75.3206,32.1798],[75.3189,32.2081],[75.3725,32.2265],[75.3796,32.2696],[75.3212,32.2982],[75.3211,32.3436],[75.1929,32.4015],[75.1905,32.4264],[75.1328,32.4102],[75.1004,32.4779],[75.0237,32.4922],[74.9501,32.4467],[74.8708,32.4879],[74.682,32.4936],[74.6896,32.5345],[74.6391,32.615],[74.6952,32.6615],[74.6554,32.7299],[74.7023,32.8415],[74.6333,32.8079],[74.6585,32.7866],[74.6375,32.7514],[74.5133,32.7446],[74.4395,32.7923],[74.3676,32.7717],[74.3255,32.8142],[73.984,32.9668],[73.9043,33.0392],[73.7952,33.0149],[73.6293,33.1034],[73.6313,33.1352],[73.6708,33.1566],[73.6695,33.212],[73.6247,33.2552],[73.5827,33.4026],[73.63,33.4569],[73.6159,33.5137],[73.633,33.54],[73.5742,33.6394],[73.6009,33.7057],[73.5669,33.7977],[73.5936,33.8941],[73.511,34.0187],[73.4804,34.2912],[73.3984,34.3783],[73.4657,34.575],[73.5677,34.5876],[73.6635,34.5716],[73.6861,34.6558],[73.6647,34.6699],[73.7438,34.7734],[73.8529,34.8146],[73.9275,34.8113],[74.04,34.8994],[74.0671,34.9565],[74.0694,34.9967],[74.1078,35.026],[74.0813,35.0628],[74.0948,35.0911],[74.1169,35.1232],[74.1123,35.1532],[74.0185,35.1674],[73.9917,35.1817],[73.9578,35.1651],[73.9008,35.212],[73.8,35.2357],[73.7499,35.2209],[73.6929,35.3492],[73.7464,35.4291],[73.7944,35.4491],[73.7737,35.5239],[73.4053,35.5293],[73.3253,35.664],[73.2401,35.6577],[73.1176,35.7349],[73.1302,35.7651],[73.1983,35.8009],[73.1694,35.8578],[73.1165,35.8537],[73.0869,35.8733],[73.0161,35.8459],[72.8919,35.8495],[72.8907,35.8774],[72.8177,35.8847],[72.6773,35.8213],[72.5685,35.8519],[72.5182,35.9244],[72.5658,36.0289],[72.5218,36.0943],[72.5703,36.2539],[72.6864,36.2755],[72.8572,36.3883],[72.8881,36.4631],[72.9662,36.4954],[73.0714,36.6243],[73.0815,36.6986],[73.4089,36.7586],[73.6067,36.7097],[73.8588,36.723],[73.8266,36.8085],[73.684,36.8655],[73.6699,36.9224],[73.7001,36.9197],[73.8789,36.8939],[74.0461,36.8356],[74.1359,36.8859],[74.2177,36.9144],[74.3244,36.9455],[74.5005,37.0086],[74.5761,37.0042],[74.601,37.0504],[74.7042,37.0976],[74.7808,37.0343],[74.8465,37.0534],[74.9217,36.9443],[74.9604,36.9962],[75.159,37.0296],[75.2596,36.9745],[75.419,36.9448],[75.3978,36.9093],[75.4322,36.85],[75.447,36.7483],[75.4606,36.7298],[75.536,36.749],[75.5566,36.778],[75.7595,36.7388],[75.9337,36.5899],[76.1493,36.4245],[76.3186,36.3301],[76.4286,36.2395],[76.5683,36.1904],[76.7587,36.11],[76.939,35.84],[77.1295,35.7301],[77.4214,35.6402],[77.5087,35.5802],[77.5187,35.4857]]],[[[93.8458,7.2446],[93.8937,7.2025],[93.8991,7.0854],[93.9612,7.0016],[93.9287,6.9925],[93.9525,6.9521],[93.9096,6.9017],[93.9075,6.8029],[93.8662,6.8133],[93.8399,6.7554],[93.795,6.8845],[93.725,6.9987],[93.6696,7.0191],[93.6612,7.13],[93.6908,7.1887],[93.8104,7.2066],[93.8458,7.2446]]],[[[93.7362,7.4233],[93.7716,7.3646],[93.6588,7.2541],[93.6491,7.3737],[93.7279,7.3933],[93.7233,7.4445],[93.7362,7.4233]]],[[[93.3775,8.0212],[93.4546,7.9307],[93.4574,7.8695],[93.4216,7.8995],[93.3387,7.8899],[93.3483,7.9421],[93.3179,7.9258],[93.3249,7.9995],[93.3775,8.0212]]],[[[93.5675,8.0262],[93.5867,7.927],[93.5188,7.9858],[93.5675,8.0262]]],[[[93.5979,8.1125],[93.605,8.0379],[93.5729,8.1225],[93.5979,8.1125]]],[[[93.5375,8.2362],[93.5484,8.1796],[93.5092,8.1479],[93.56,8.0362],[93.5188,8.0291],[93.5116,7.9987],[93.4975,8.0437],[93.5466,8.0671],[93.5246,8.08],[93.4971,8.0549],[93.4654,8.1708],[93.5375,8.2362]]],[[[73.0608,8.2779],[73.02,8.2771],[73.0796,8.3225],[73.0608,8.2779]]],[[[93.1309,8.3546],[93.1363,8.2691],[93.2104,8.2108],[93.1974,8.1962],[93.0912,8.2783],[93.1309,8.3546]]],[[[92.7804,9.2467],[92.8195,9.21],[92.8287,9.1384],[92.7374,9.1213],[92.7225,9.213],[92.7804,9.2467]]],[[[92.5491,10.8804],[92.5879,10.8458],[92.5941,10.7879],[92.5691,10.7937],[92.622,10.7583],[92.6179,10.6683],[92.5479,10.59],[92.575,10.5637],[92.5208,10.5071],[92.4316,10.5445],[92.3858,10.5287],[92.4154,10.6299],[92.3871,10.6641],[92.3862,10.7941],[92.5116,10.8895],[92.5166,10.8671],[92.5308,10.8971],[92.5491,10.8804]]],[[[92.6608,11.4937],[92.6916,11.4196],[92.655,11.4037],[92.6983,11.3638],[92.6083,11.3413],[92.5916,11.3679],[92.6287,11.4092],[92.6283,11.4937],[92.6608,11.4937]]],[[[92.2329,11.5875],[92.2812,11.5716],[92.2716,11.5138],[92.2246,11.5316],[92.2129,11.5833],[92.2329,11.5875]]],[[[92.5475,11.6046],[92.5775,11.5813],[92.5379,11.5508],[92.5475,11.6046]]],[[[93.0242,11.8479],[93.0738,11.825],[93.0425,11.8179],[93.0242,11.8479]]],[[[92.7658,11.9671],[92.775,11.9462],[92.7471,11.9508],[92.7658,11.9671]]],[[[92.9754,12.0332],[93.0162,12.0167],[93.045,11.8796],[93.0029,11.9416],[93.0329,11.9366],[93.0033,11.9796],[92.9891,11.9438],[92.9304,11.9966],[92.9754,12.0332]]],[[[93.0058,12.1029],[92.995,12.0478],[92.9708,12.1045],[93.0058,12.1029]]],[[[93.0321,12.1475],[93.0467,12.0446],[93.0137,12.0841],[93.0321,12.1475]]],[[[93.0792,12.2087],[93.1021,12.14],[93.08,12.0821],[93.0446,12.1383],[93.0792,12.2087]]],[[[92.7096,12.2274],[92.7083,12.1628],[92.7637,12.1707],[92.745,12.0537],[92.7146,12.0474],[92.7979,12.0491],[92.7429,12.0291],[92.7725,11.9979],[92.7329,11.9758],[92.7241,11.9221],[92.7387,11.8992],[92.7921,11.9341],[92.7991,11.8962],[92.76,11.6954],[92.7071,11.6975],[92.7116,11.6604],[92.6729,11.6425],[92.7037,11.6183],[92.7317,11.6771],[92.7629,11.6566],[92.7175,11.4729],[92.6554,11.5166],[92.6541,11.5671],[92.6254,11.5616],[92.6158,11.6154],[92.6467,11.6329],[92.6129,11.6383],[92.6046,11.7108],[92.5721,11.6933],[92.5533,11.8437],[92.5316,11.8221],[92.5212,11.8492],[92.5737,11.9383],[92.6154,11.8517],[92.6296,12.1024],[92.6725,12.2129],[92.6813,12.1758],[92.7096,12.2274]]],[[[92.7404,12.2058],[92.7516,12.2345],[92.7746,12.2199],[92.7708,12.1787],[92.7304,12.1924],[92.7438,12.2366],[92.7404,12.2058]]],[[[92.9154,12.2432],[92.9217,12.2145],[92.8908,12.2229],[92.8845,12.2083],[92.885,12.2437],[92.9154,12.2432]]],[[[93.1137,12.2375],[93.1092,12.2037],[93.0687,12.2316],[93.0908,12.2587],[93.1137,12.2375]]],[[[92.9504,12.2774],[92.9304,12.2307],[92.9142,12.2887],[92.9396,12.2774],[92.947,12.3066],[92.9504,12.2774]]],[[[92.8266,12.3029],[92.8946,12.2808],[92.8696,12.2341],[92.8879,12.1916],[92.8504,12.1932],[92.8633,12.1628],[92.8229,12.1583],[92.8183,12.1029],[92.77,12.0603],[92.7471,12.0949],[92.7858,12.2386],[92.7512,12.2483],[92.7833,12.3078],[92.8266,12.3029]]],[[[92.8758,12.4053],[92.9037,12.3941],[92.8904,12.3708],[92.8529,12.4024],[92.8758,12.4053]]],[[[92.9704,12.4124],[92.9254,12.3624],[92.9425,12.4162],[92.9704,12.4124]]],[[[92.7249,12.8254],[92.7291,12.7154],[92.7045,12.7933],[92.7249,12.8254]]],[[[92.9095,12.9108],[92.9571,12.8341],[92.9429,12.7708],[92.9912,12.7049],[92.9487,12.6141],[92.9895,12.5316],[92.9762,12.4858],[92.9324,12.462],[92.9679,12.4608],[92.92,12.402],[92.9083,12.4578],[92.8529,12.4657],[92.9071,12.4157],[92.8866,12.4103],[92.8095,12.4557],[92.8958,12.3195],[92.7437,12.2983],[92.7071,12.3333],[92.7137,12.5983],[92.6966,12.617],[92.7608,12.667],[92.7928,12.6349],[92.7949,12.7029],[92.7437,12.6708],[92.7316,12.8237],[92.7903,12.8274],[92.8083,12.8887],[92.8699,12.8762],[92.9095,12.9108]]],[[[92.7107,12.9862],[92.732,12.8858],[92.6754,12.7808],[92.6591,12.8587],[92.682,12.9674],[92.7107,12.9862]]],[[[93.0171,12.9875],[92.9883,12.9253],[92.9604,12.9366],[92.9741,12.9862],[93.0171,12.9875]]],[[[92.7192,13.0979],[92.7112,13.0658],[92.7024,13.1062],[92.7192,13.0979]]],[[[93.0487,13.5458],[93.0408,13.4296],[93.0196,13.4233],[93.0704,13.4075],[93.0612,13.3741],[93.0933,13.3254],[93.0695,13.3075],[93.0508,13.3504],[92.9941,13.3246],[92.9733,13.3596],[92.9629,13.3367],[93.005,13.2837],[93.0196,13.315],[93.0221,13.2733],[93.0729,13.2617],[93.0362,13.0533],[92.9687,13.0125],[92.9467,13.0971],[92.9383,13.0504],[92.8946,13.0859],[92.9175,13.0529],[92.8912,13.0375],[92.9212,13.0367],[92.9149,12.9962],[92.9458,12.9654],[92.9128,12.9466],[92.9054,12.9866],[92.8645,12.9358],[92.8749,12.8812],[92.8095,12.8983],[92.8012,12.9758],[92.8367,13.0104],[92.7946,13.0175],[92.8058,13.0896],[92.8229,13.0742],[92.8183,13.1237],[92.8567,13.1387],[92.8187,13.1533],[92.8388,13.2358],[92.8621,13.2383],[92.8308,13.3096],[92.8491,13.3737],[92.8825,13.3888],[92.8537,13.4016],[92.8863,13.405],[92.88,13.4679],[92.9379,13.4958],[92.9333,13.5329],[92.9988,13.5292],[93.0,13.5671],[93.0229,13.545],[93.0383,13.5746],[93.0487,13.5458]]],[[[93.0292,13.6696],[93.0367,13.6221],[92.9904,13.6542],[93.0292,13.6696]]],[[[88.53,21.5602],[88.4816,21.5627],[88.4962,21.5997],[88.53,21.5602]]],[[[88.8453,21.5995],[88.8976,21.5627],[88.8422,21.5661],[88.8453,21.5995]]],[[[88.5529,21.6312],[88.5882,21.5975],[88.5449,21.5711],[88.5122,21.6095],[88.5261,21.6529],[88.5529,21.6312]]],[[[88.3083,21.7063],[88.3507,21.6445],[88.3141,21.6063],[88.3083,21.7063]]],[[[88.7266,21.6657],[88.7714,21.6506],[88.7831,21.5823],[88.7095,21.5941],[88.7189,21.6442],[88.6913,21.6875],[88.6998,21.6984],[88.7266,21.6657]]],[[[88.2108,21.6704],[88.2312,21.6383],[88.21,21.5954],[88.1812,21.6916],[88.2079,21.7191],[88.2108,21.6704]]],[[[88.5589,21.7299],[88.6037,21.6808],[88.5913,21.6201],[88.5306,21.6633],[88.5187,21.7136],[88.5589,21.7299]]],[[[88.5449,21.8118],[88.5707,21.7343],[88.5194,21.7207],[88.5077,21.7783],[88.5449,21.8118]]],[[[88.5983,21.8473],[88.6122,21.7991],[88.5771,21.8172],[88.5983,21.8473]]],[[[88.1687,21.7858],[88.1525,21.6796],[88.1291,21.6779],[88.1571,21.6558],[88.1458,21.6313],[88.0421,21.65],[88.1325,21.8729],[88.1687,21.7858]]],[[[88.6463,21.9172],[88.6627,21.9019],[88.6367,21.7874],[88.5976,21.8609],[88.6463,21.9172]]],[[[88.6637,22.0186],[88.713,21.9969],[88.6771,21.944],[88.6283,21.9662],[88.6637,22.0186]]],[[[88.0702,21.9217],[88.0517,21.9379],[88.0959,22.0145],[88.1445,22.0266],[88.0702,21.9217]]]]};
 
 // ════════════════════════════════════════════════════════════
-// UTILITY — tile naming
+// UTILITY - tile naming
 // ════════════════════════════════════════════════════════════
 function getTileName(lat, lon) {
   const tLat = Math.floor(lat);
@@ -1167,7 +1173,7 @@ function formatSize(mb) {
 }
 
 // ════════════════════════════════════════════════════════════
-// UTILITY — geometry
+// UTILITY - geometry
 // ════════════════════════════════════════════════════════════
 function pointInRing(px, py, ring) {
   let inside = false;
@@ -1218,7 +1224,7 @@ function tilesFromGeometry(geom) {
   const lonLo = Math.max(Math.floor(bb.minLng), SRTM.LON_MIN);
   const lonHi = Math.min(Math.floor(bb.maxLng), SRTM.LON_MAX - 1);
   // A tile is included if any of a 3×3 sample grid inside it falls in the geometry,
-  // not just the centre — otherwise border tiles (e.g. Tawang) whose centre lands in a
+  // not just the centre - otherwise border tiles (e.g. Tawang) whose centre lands in a
   // neighbouring country would be dropped even though the region belongs to the country.
   const F = [0.15, 0.5, 0.85];
   for (let la = latLo; la <= latHi; la++)
@@ -1343,7 +1349,7 @@ const SRTMLayer = L.Layer.extend({
     const lonLo = Math.floor(b.getWest());
     const lonHi = Math.ceil(b.getEast()) - 1;
 
-    // Outline only the 1°×1° cells that actually have a DEM tile — ocean stays blank so
+    // Outline only the 1°×1° cells that actually have a DEM tile - ocean stays blank so
     // users aren't tempted to select empty water. One Path2D, one stroke, for speed.
     ctx.strokeStyle = 'rgba(148,163,184,0.22)';
     ctx.lineWidth = zoom >= 6 ? 0.8 : 0.5;
@@ -1468,7 +1474,7 @@ function setTool(tool) {
     activeDrawer.enable();
   }
 
-  // On the mobile drawer, drawing needs the map visible — close it automatically.
+  // On the mobile drawer, drawing needs the map visible - close it automatically.
   // No-op on desktop, where the sidebar isn't an overlay.
   if (tool === 'rect' || tool === 'polygon') closeSidebar();
 }
@@ -1518,7 +1524,7 @@ async function searchCountry() {
   const st = document.getElementById('country-status');
 
   // India: use the official claimed boundary (J&K, PoK/Gilgit-Baltistan, Aksai Chin,
-  // Siachen, Arunachal Pradesh), not OSM's de-facto line — see INDIA_BOUNDARY above.
+  // Siachen, Arunachal Pradesh), not OSM's de-facto line - see INDIA_BOUNDARY above.
   if (INDIA_QUERY.test(q)) {
     const tiles = tilesFromGeometry(INDIA_BOUNDARY);
     tiles.forEach(t => selectedTiles.add(t));
@@ -1557,7 +1563,7 @@ async function searchCountry() {
     notify(`${tiles.length} tiles selected for ${label}`, 'success');
     closeSidebar();
   } catch {
-    st.innerHTML = '<span style="color:#ef4444">Search failed — check connection</span>';
+    st.innerHTML = '<span style="color:#ef4444">Search failed - check connection</span>';
     notify('Country search failed', 'error');
   }
 }
@@ -1648,7 +1654,7 @@ function updateTilesList() {
   }
   const sorted = Array.from(selectedTiles).sort();
   container.innerHTML = `
-    <div class="tiles-count">${sorted.length} tile${sorted.length !== 1 ? 's' : ''} — click a chip to remove</div>
+    <div class="tiles-count">${sorted.length} tile${sorted.length !== 1 ? 's' : ''} - click a chip to remove</div>
     <div class="tiles-chips">
       ${sorted.map(t => `<span class="tile-chip" onclick="removeTile('${t}')" title="Remove ${t}">${t}</span>`).join('')}
     </div>`;
@@ -1716,7 +1722,7 @@ function toggleSidebar() {
 // IN-BROWSER DOWNLOADER
 // ════════════════════════════════════════════════════════════
 // Tiles are fetched straight from the OpenTopography S3 mirror. Ocean-only
-// tiles simply do not exist there and come back 404 — those are skipped, not
+// tiles simply do not exist there and come back 404 - those are skipped, not
 // treated as errors.
 let _dlRunning = false;
 let _dlAbort   = null;
@@ -1850,7 +1856,7 @@ async function downloadTiles() {
   }
 }
 
-// ── Availability check (HEAD only — no payload) ──────────────
+// ── Availability check (HEAD only - no payload) ──────────────
 async function checkAvailability() {
   const tiles = Array.from(selectedTiles).sort();
   const statusEl = document.getElementById('dl-check-status');
@@ -1884,25 +1890,25 @@ function _refreshScripts(tiles, urls) {
   const date = new Date().toISOString().split('T')[0];
   document.getElementById('wget-script').textContent = [
     '#!/bin/bash',
-    `# SRTM DEM Download Script — Generated ${date}`,
+    `# SRTM DEM Download Script - Generated ${date}`,
     `# Product: ${currentProduct}  |  Tiles: ${tiles.length}`,
     '#',
-    '# Source: OpenTopography public S3 mirror — no account, no credentials needed.',
+    '# Source: OpenTopography public S3 mirror - no account, no credentials needed.',
     '# Tiles that are pure ocean return 404; -nv keeps the log readable.',
     '',
     'mkdir -p srtm_data && cd srtm_data',
     '',
     ...urls.map(u => `wget -nv -c "${u}"`),
     '',
-    'echo "Done — $(ls -1 *.tif 2>/dev/null | wc -l) tiles in $(pwd)"',
+    'echo "Done - $(ls -1 *.tif 2>/dev/null | wc -l) tiles in $(pwd)"',
   ].join('\n');
 
   document.getElementById('python-script').textContent = [
     '#!/usr/bin/env python3',
-    `# SRTM DEM Downloader — Generated ${date}`,
+    `# SRTM DEM Downloader - Generated ${date}`,
     `# Product: ${currentProduct}  |  Tiles: ${tiles.length}`,
     '#',
-    '# Source: OpenTopography public S3 mirror — no authentication required.',
+    '# Source: OpenTopography public S3 mirror - no authentication required.',
     '# pip install requests',
     '',
     'import requests',
@@ -1968,12 +1974,12 @@ function showDownloadModal() {
 
   _refreshScripts(tiles, urls);
 
-  // OpenTopography API — one merged GeoTIFF for the whole selection bbox
+  // OpenTopography API - one merged GeoTIFF for the whole selection bbox
   const OTOPO_DEMTYPE = { SRTMGL1: 'SRTMGL1', NASADEM: 'NASADEM', ALOS: 'AW3D30', COP30: 'COP30', SRTMGL3: 'SRTMGL3', COP90: 'COP90' };
   const demType = OTOPO_DEMTYPE[currentProduct];
   const otopoBase = `https://portal.opentopography.org/API/globaldem?demtype=${demType}&south=${bb.minLat}&north=${bb.maxLat}&west=${bb.minLon}&east=${bb.maxLon}&outputFormat=GTiff&API_Key=YOUR_API_KEY`;
   document.getElementById('otopo-script').textContent = [
-    '# OpenTopography Global DEM API — returns ONE merged GeoTIFF for your',
+    '# OpenTopography Global DEM API - returns ONE merged GeoTIFF for your',
     '# whole bounding box instead of individual 1°x1° tiles.',
     '#',
     '# Free API key (takes a minute): https://portal.opentopography.org/requestApiKey',
@@ -2038,11 +2044,11 @@ function downloadManifest() {
     `# Resolution  : ${PRODUCTS[currentProduct].res === '3arc' ? '3 arc-second (~90 m)' : '1 arc-second (~30 m)'}`,
     `# Tiles       : ${tiles.length}`,
     `# Est. size   : ~${formatSize(tiles.length * product.sizeMB)}`,
-    `# Source      : OpenTopography public mirror — no authentication required`,
+    `# Source      : OpenTopography public mirror - no authentication required`,
     `#`,
     `# Download every tile with wget:`,
     `#   wget -nv -c -i manifest.txt`,
-    `# Ocean-only tiles are absent from the archive and return 404 — that is expected.`,
+    `# Ocean-only tiles are absent from the archive and return 404 - that is expected.`,
     ``,
     ...urls
   ].join('\n');
@@ -2098,7 +2104,7 @@ document.addEventListener('keydown', e => {
 // ════════════════════════════════════════════════════════════
 // Build the product dropdown from RES_PRODUCTS so it always reflects every
 // dataset for the default resolution (30 m). The static <option> list in the
-// HTML is only a placeholder — without this, the first load showed just SRTM
+// HTML is only a placeholder - without this, the first load showed just SRTM
 // GL1 + NASADEM until you toggled resolution and forced setResolution() to run.
 setResolution('1arc');
 updateUI();
@@ -2111,7 +2117,7 @@ updateUI();
 // "Save page as", the Network tab, or a curl of the file). These handlers only
 // slow down a casual copier. For genuine protection, minify/obfuscate the JS
 // at build time and move the parts you care about (the tile-URL scheme, the
-// land-mask, any API keys) behind a small server proxy — see README.
+// land-mask, any API keys) behind a small server proxy - see README.
 (function () {
   // Block the right-click context menu.
   document.addEventListener('contextmenu', e => e.preventDefault());
