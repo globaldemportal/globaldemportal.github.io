@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Global DEM Portal - SRTM · NASADEM · ALOS · Copernicus Downloader</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: #0f172a;
+      color: #f1f5f9;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── Sidebar ─────────────────────────────────── */
+    #sidebar {
+      width: 320px;
+      min-width: 320px;
+      background: #1e293b;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      z-index: 1000;
+      border-right: 1px solid #334155;
+      overflow: hidden;
+    }
+
+    .sidebar-header {
+      padding: 18px 16px 14px;
+      border-bottom: 1px solid #334155;
+      flex-shrink: 0;
+    }
+    .sidebar-header h1 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #f8fafc;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .version-badge {
+      font-size: 10px;
+      font-weight: 600;
+      background: #3b82f6;
+      color: #fff;
+      padding: 2px 7px;
+      border-radius: 20px;
+      letter-spacing: 0.3px;
+    }
+    .sidebar-header p {
+      font-size: 11.5px;
+      color: #94a3b8;
+      margin-top: 5px;
+      line-height: 1.45;
+    }
+
+    /* ── Stats bar ───────────────────────────────── */
+    .stats-bar {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      background: #0f172a;
+      border-bottom: 1px solid #334155;
+      flex-shrink: 0;
+    }
+    .stat-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 11px 8px;
+    }
+    .stat-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #3b82f6;
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 9.5px;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-top: 3px;
+    }
+    .stat-divider { width: 1px; background: #334155; align-self: stretch; }
+
+    /* ── Tabs ────────────────────────────────────── */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #334155;
+      flex-shrink: 0;
+    }
+    .tab {
+      flex: 1;
+      padding: 9px 4px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 500;
+      color: #64748b;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .tab:hover { color: #94a3b8; }
+    .tab.active { color: #3b82f6; border-bottom-color: #3b82f6; }
+
+    /* ── Tab content ─────────────────────────────── */
+    .tab-content {
+      display: none;
+      padding: 14px 14px 10px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .tab-content.active { display: block; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 2px; }
+
+    /* ── Sections ────────────────────────────────── */
+    .section { margin-bottom: 18px; }
+    .section-title {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #64748b;
+      margin-bottom: 8px;
+    }
+
+    /* ── Tool grid ───────────────────────────────── */
+    .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    .tool-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      padding: 11px 6px;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: #94a3b8;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .tool-btn:hover { border-color: #3b82f6; color: #f1f5f9; }
+    .tool-btn.active { background: rgba(29,78,216,0.35); border-color: #3b82f6; color: #93c5fd; }
+    .tool-btn svg { width: 18px; height: 18px; }
+
+    /* ── Search row ──────────────────────────────── */
+    .search-row { display: flex; gap: 7px; }
+    .search-input {
+      flex: 1;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 7px 10px;
+      color: #f1f5f9;
+      font-size: 12px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .search-input:focus { border-color: #3b82f6; }
+    .search-input::placeholder { color: #475569; }
+    .search-btn {
+      background: #1d4ed8;
+      border: none;
+      border-radius: 6px;
+      padding: 7px 13px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      transition: background 0.15s;
+    }
+    .search-btn:hover { background: #2563eb; }
+    #country-status {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 5px;
+      min-height: 15px;
+      line-height: 1.4;
+    }
+
+    /* ── Upload area ─────────────────────────────── */
+    .upload-area {
+      border: 2px dashed #334155;
+      border-radius: 8px;
+      padding: 18px 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+      color: #64748b;
+      font-size: 11.5px;
+      line-height: 1.5;
+    }
+    .upload-area:hover { border-color: #3b82f6; color: #94a3b8; }
+    .upload-area svg { display: block; margin: 0 auto 7px; }
+    .upload-hint { font-size: 10px; color: #475569; margin-top: 3px; }
+
+    /* ── Resolution options ──────────────────────── */
+    .resolution-options { display: flex; gap: 7px; }
+    .res-option {
+      flex: 1;
+      padding: 10px 8px;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      text-align: center;
+    }
+    .res-option:hover { border-color: #3b82f6; }
+    .res-option.active { background: rgba(59,130,246,0.12); border-color: #3b82f6; }
+    .res-value { font-size: 17px; font-weight: 700; color: #f1f5f9; }
+    .res-label { font-size: 10px; color: #64748b; margin-top: 2px; }
+
+    /* ── Product select ──────────────────────────── */
+    .product-select {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 8px 10px;
+      color: #f1f5f9;
+      font-size: 12px;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .product-select:focus { border-color: #3b82f6; }
+
+    /* ── Option label ────────────────────────────── */
+    .option-label { font-size: 11px; color: #64748b; margin-bottom: 5px; }
+
+    /* ── Zoom select btn ─────────────────────────── */
+    .zoom-select-btn {
+      width: 100%;
+      padding: 9px;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: #94a3b8;
+      font-size: 12px;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      justify-content: center;
+    }
+    .zoom-select-btn:hover { border-color: #3b82f6; color: #f1f5f9; }
+
+    /* ── Info tab ────────────────────────────────── */
+    .info-section { margin-bottom: 18px; }
+    .info-section h3 { font-size: 13px; font-weight: 600; color: #f1f5f9; margin-bottom: 6px; }
+    .info-section p { font-size: 12px; color: #94a3b8; line-height: 1.6; }
+    .info-section a { color: #60a5fa; text-decoration: none; }
+    .info-section a:hover { text-decoration: underline; }
+    .coverage-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 7px; }
+    .coverage-table th {
+      background: #0f172a;
+      padding: 5px 10px;
+      text-align: left;
+      color: #64748b;
+      font-weight: 500;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .coverage-table td { padding: 6px 10px; color: #94a3b8; border-bottom: 1px solid #1e293b; }
+    .coverage-table tr:last-child td { border-bottom: none; }
+
+    /* ── Tiles tab ───────────────────────────────── */
+    .tiles-empty { font-size: 12px; color: #64748b; text-align: center; padding: 24px 0; line-height: 1.7; }
+    .tiles-count { font-size: 11px; color: #64748b; margin-bottom: 8px; }
+    .tiles-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+    .tile-chip {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 4px;
+      padding: 3px 7px;
+      font-size: 10.5px;
+      font-family: 'Courier New', monospace;
+      color: #94a3b8;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .tile-chip:hover { border-color: #ef4444; color: #fca5a5; }
+
+    /* ── Action buttons ──────────────────────────── */
+    .action-buttons {
+      padding: 13px 14px;
+      border-top: 1px solid #334155;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+    .btn-primary {
+      width: 100%;
+      padding: 11px;
+      background: #3b82f6;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, opacity 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+    }
+    .btn-primary:hover:not(:disabled) { background: #2563eb; }
+    .btn-primary:disabled { background: #1e3a5f; color: #475569; cursor: not-allowed; opacity: 0.7; }
+    .btn-secondary {
+      width: 100%;
+      padding: 9px;
+      background: transparent;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: #94a3b8;
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .btn-secondary:hover { border-color: #475569; color: #f1f5f9; }
+
+    /* ── Map ─────────────────────────────────────── */
+    #map { flex: 1; height: 100vh; }
+
+    /* ── Tile tooltip ────────────────────────────── */
+    #tile-tooltip {
+      position: fixed;
+      background: rgba(15,23,42,0.92);
+      border: 1px solid #334155;
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-family: 'Courier New', monospace;
+      color: #94a3b8;
+      pointer-events: none;
+      z-index: 9500;
+      display: none;
+      white-space: nowrap;
+    }
+
+    /* ── Download modal ──────────────────────────── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+    }
+    .modal-overlay.visible { display: flex; }
+    .modal {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      width: 620px;
+      max-width: 94vw;
+      max-height: 84vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+    }
+    .modal-header {
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid #334155;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .modal-header h2 { font-size: 15px; font-weight: 600; }
+    .modal-header .modal-subtitle { font-size: 11px; color: #64748b; margin-top: 2px; }
+    .modal-close {
+      background: none;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      font-size: 22px;
+      line-height: 1;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: color 0.15s;
+    }
+    .modal-close:hover { color: #f1f5f9; }
+    .modal-body { padding: 18px 22px; overflow-y: auto; flex: 1; }
+    .modal-footer {
+      padding: 14px 22px;
+      border-top: 1px solid #334155;
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      flex-shrink: 0;
+    }
+
+    /* ── Download tabs ───────────────────────────── */
+    .dl-tabs {
+      display: flex;
+      gap: 2px;
+      background: #0f172a;
+      border-radius: 8px;
+      padding: 3px;
+      margin-bottom: 14px;
+    }
+    .dl-tab {
+      flex: 1;
+      padding: 6px 10px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 500;
+      color: #64748b;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .dl-tab.active { background: #1e293b; color: #f1f5f9; }
+
+    .info-box {
+      background: rgba(59,130,246,0.08);
+      border: 1px solid rgba(59,130,246,0.25);
+      border-radius: 8px;
+      padding: 11px 13px;
+      font-size: 12px;
+      color: #93c5fd;
+      line-height: 1.55;
+      margin-bottom: 14px;
+    }
+    .info-box a { color: #60a5fa; }
+
+    .url-list {
+      background: #0f172a;
+      border: 1px solid #2d3748;
+      border-radius: 8px;
+      padding: 11px 13px;
+      max-height: 280px;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      color: #94a3b8;
+      line-height: 1.8;
+      white-space: pre;
+      overflow-x: auto;
+    }
+    .url-count-label { font-size: 11.5px; color: #64748b; margin-bottom: 7px; }
+    .loader {
+      display: inline-block; width: 10px; height: 10px; margin-right: 5px;
+      border: 2px solid #334155; border-top-color: #60a5fa;
+      border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .btn-sm-primary {
+      background: #3b82f6;
+      border: none;
+      border-radius: 7px;
+      padding: 8px 18px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+    .btn-sm-primary:hover { background: #2563eb; }
+    .btn-sm-secondary {
+      background: transparent;
+      border: 1px solid #334155;
+      border-radius: 7px;
+      padding: 8px 16px;
+      color: #94a3b8;
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .btn-sm-secondary:hover { border-color: #475569; color: #f1f5f9; }
+
+    /* ── Download progress ───────────────────────── */
+    .progress-track {
+      height: 5px;
+      background: #0f172a;
+      border: 1px solid #2d3748;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, #3b82f6, #60a5fa);
+      transition: width 0.2s ease;
+    }
+
+    /* ── Notification toast ──────────────────────── */
+    #notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 10px 15px;
+      font-size: 12.5px;
+      color: #f1f5f9;
+      z-index: 9999;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.25s, transform 0.25s;
+      pointer-events: none;
+      max-width: 280px;
+    }
+    #notification.visible { opacity: 1; transform: translateY(0); }
+    #notification.success { border-left: 3px solid #22c55e; }
+    #notification.error   { border-left: 3px solid #ef4444; }
+    #notification.info    { border-left: 3px solid #3b82f6; }
+
+    /* ── Loader spinner ──────────────────────────── */
+    .loader {
+      display: inline-block;
+      width: 12px; height: 12px;
+      border: 2px solid rgba(148,163,184,0.3);
+      border-top-color: #94a3b8;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Keyboard hint ───────────────────────────── */
+    .kbd-hint {
+      font-size: 10px;
+      color: #475569;
+      margin-top: 6px;
+      text-align: center;
+    }
+    kbd {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 3px;
+      padding: 1px 4px;
+      font-family: inherit;
+      font-size: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SIDEBAR
+═══════════════════════════════════════════════════════════ -->
+<div id="sidebar">
+
+  <div class="sidebar-header">
+    <h1>
+      🗻 Global DEM Portal
+      <span class="version-badge">v1</span>
+    </h1>
+    <p>Select tiles on the map, then download SRTM, NASADEM, ALOS or Copernicus elevation data as GeoTIFF</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-value" id="stat-tiles">0</div>
+      <div class="stat-label">Selected</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <div class="stat-value" id="stat-size">—</div>
+      <div class="stat-label">Est. Size</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <div class="stat-value" id="stat-res">30m</div>
+      <div class="stat-label">Resolution</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" data-tab="tools">Tools</div>
+    <div class="tab" data-tab="tiles">Tiles</div>
+    <div class="tab" data-tab="info">Info</div>
+  </div>
+
+  <!-- ── Tools Tab ─────────────────────────────── -->
+  <div class="tab-content active" id="tab-tools">
+
+    <div class="section">
+      <div class="section-title">How to Select Tiles</div>
+      <div class="tool-grid">
+        <button class="tool-btn active" id="btn-click" onclick="setTool('click')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 2l16 10-7 1.5-3 7.5z"/>
+          </svg>
+          Click Tiles
+        </button>
+        <button class="tool-btn" id="btn-rect" onclick="setTool('rect')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+          </svg>
+          Rectangle
+        </button>
+        <button class="tool-btn" id="btn-polygon" onclick="setTool('polygon')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12,3 21,9 18,20 6,20 3,9"/>
+          </svg>
+          Polygon
+        </button>
+        <button class="tool-btn" id="btn-visible" onclick="selectVisibleTiles()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="5" width="20" height="14" rx="2"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          Visible Area
+        </button>
+      </div>
+      <div class="kbd-hint"><kbd>C</kbd> Click &nbsp; <kbd>R</kbd> Rect &nbsp; <kbd>P</kbd> Polygon &nbsp; <kbd>Esc</kbd> Reset</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Select by Country</div>
+      <div class="search-row">
+        <input type="text" class="search-input" id="country-input" placeholder="e.g. Nepal, Kenya…" />
+        <button class="search-btn" onclick="searchCountry()">Select</button>
+      </div>
+      <div id="country-status"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Upload GeoJSON Geometry</div>
+      <div class="upload-area" id="upload-area" onclick="document.getElementById('geojson-file').click()">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+        </svg>
+        Click to browse or drag &amp; drop
+        <div class="upload-hint">GeoJSON Polygon / MultiPolygon · Max 25 MB</div>
+      </div>
+      <input type="file" id="geojson-file" accept=".geojson,.json" style="display:none" />
+    </div>
+
+    <div class="section">
+      <div class="section-title">Dataset Options</div>
+
+      <div style="margin-bottom:10px">
+        <div class="option-label">Resolution</div>
+        <div class="resolution-options">
+          <div class="res-option active" id="res-1arc" onclick="setResolution('1arc')">
+            <div class="res-value">30m</div>
+            <div class="res-label">1 arc-sec</div>
+          </div>
+          <div class="res-option" id="res-3arc" onclick="setResolution('3arc')">
+            <div class="res-value">90m</div>
+            <div class="res-label">3 arc-sec</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="option-label">Product</div>
+        <select class="product-select" id="product-select">
+          <option value="SRTMGL1">SRTM GL1 — 1 arc-sec (~30 m)</option>
+          <option value="NASADEM">NASADEM — void-filled SRTM (~30 m)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">View</div>
+      <button class="zoom-select-btn" onclick="zoomToSelection()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+        </svg>
+        Zoom to Selection
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ── Tiles Tab ──────────────────────────────── -->
+  <div class="tab-content" id="tab-tiles">
+    <div id="tiles-list-container">
+      <div class="tiles-empty">No tiles selected yet.<br>Use the tools in the Tools tab to<br>select SRTM tiles on the map.</div>
+    </div>
+  </div>
+
+  <!-- ── Info Tab ───────────────────────────────── -->
+  <div class="tab-content" id="tab-info">
+    <div class="info-section">
+      <h3>About</h3>
+      <p>Select 1°×1° tiles and download open global elevation data as GeoTIFF. Six free DEMs are available — pick one under <strong style="color:#f1f5f9">Dataset Options</strong>. Coverage differs by mission, so the red boundary lines on the map move when you switch products.</p>
+    </div>
+    <div class="info-section">
+      <h3>Datasets</h3>
+      <table class="coverage-table">
+        <thead><tr><th>Product</th><th>Res</th><th>Extent</th></tr></thead>
+        <tbody>
+          <tr><td>SRTM GL1</td><td>~30 m</td><td>56°S – 60°N</td></tr>
+          <tr><td>NASADEM</td><td>~30 m</td><td>56°S – 60°N</td></tr>
+          <tr><td>ALOS AW3D30</td><td>~30 m</td><td>82°S – 82°N</td></tr>
+          <tr><td>Copernicus GLO-30</td><td>~30 m</td><td>global</td></tr>
+          <tr><td>SRTM GL3</td><td>~90 m</td><td>56°S – 60°N</td></tr>
+          <tr><td>Copernicus GLO-90</td><td>~90 m</td><td>global</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="info-section">
+      <h3>Sources</h3>
+      <p><strong style="color:#f1f5f9">SRTM / NASADEM</strong> — NASA/USGS radar (2000).<br>
+      <strong style="color:#f1f5f9">ALOS AW3D30</strong> — JAXA optical stereo (2006–2011).<br>
+      <strong style="color:#f1f5f9">Copernicus GLO-30/90</strong> — ESA's open DEM edited from Airbus <em>TanDEM-X</em> radar (2011–2015); the freely redistributable TanDEM-X-based global DEM.</p>
+    </div>
+    <div class="info-section">
+      <h3>Tile Naming Convention</h3>
+      <p>Tiles are named by their lower-left corner. <strong style="color:#f1f5f9">N37W122</strong> = lat 37–38°N, lon 122–121°W. Each tile covers exactly 1°×1°. Filenames on disk follow each dataset's own convention.</p>
+    </div>
+    <div class="info-section">
+      <h3>Coverage Limits</h3>
+      <p>The grid is drawn only over cells that actually have a DEM tile, so open ocean stays blank and can't be selected. Red dashed lines mark the selected product's latitude limit; global products (Copernicus) show none.</p>
+    </div>
+    <div class="info-section">
+      <h3>Data Access</h3>
+      <p>
+        Tiles download straight from the <a href="https://opentopography.org" target="_blank">OpenTopography</a>
+        public mirror as GeoTIFF — no account, no login.<br>
+        NASA's own <a href="https://earthdata.nasa.gov" target="_blank">Earthdata</a> distribution serves the same
+        data but requires a login and blocks browser requests, so it cannot be used directly from a web page.
+      </p>
+    </div>
+    <div class="info-section">
+      <h3>Citation</h3>
+      <p>Cite the dataset you use. SRTM: NASA JPL (2013),
+        <a href="https://doi.org/10.5067/MEaSUREs/SRTM/SRTMGL1.003" target="_blank">doi:10.5067/MEaSUREs/SRTM/SRTMGL1.003</a>.
+        ALOS AW3D30: © JAXA. Copernicus DEM: © ESA / Airbus, produced from TanDEM-X.
+        All redistributed by <a href="https://opentopography.org" target="_blank">OpenTopography</a>.</p>
+    </div>
+    <div class="info-section">
+      <h3>Contact</h3>
+      <p>Built as an open web portal inspired by <a href="https://chm.geocarpentry.org/" target="_blank">geocarpentry.org</a>.</p>
+    </div>
+  </div>
+
+  <!-- Action buttons (always visible) -->
+  <div class="action-buttons">
+    <button class="btn-primary" id="btn-download" onclick="showDownloadModal()" disabled>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+      </svg>
+      Get Downloads
+    </button>
+    <button class="btn-secondary" onclick="clearAll()">Clear All</button>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MAP
+═══════════════════════════════════════════════════════════ -->
+<div id="map"></div>
+
+<!-- Tooltip -->
+<div id="tile-tooltip"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     DOWNLOAD MODAL
+═══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h2>Download SRTM Tiles</h2>
+        <div class="modal-subtitle" id="modal-subtitle"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="info-box">
+        ✅ Tiles are served as <strong>GeoTIFF</strong> from the
+        <a href="https://opentopography.org" target="_blank">OpenTopography</a> public mirror —
+        no account, no login, direct download. Ocean-only tiles have no data and are skipped automatically.
+      </div>
+
+      <div class="dl-tabs">
+        <div class="dl-tab active" onclick="switchDlTab('urls')">Direct Download</div>
+        <div class="dl-tab" onclick="switchDlTab('wget')">wget Script</div>
+        <div class="dl-tab" onclick="switchDlTab('python')">Python</div>
+        <div class="dl-tab" onclick="switchDlTab('otopo')">Merged GeoTIFF</div>
+      </div>
+
+      <div id="dl-panel-urls">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px">
+          <div class="url-count-label" id="url-count-label"></div>
+          <button class="btn-sm-secondary" id="btn-check" onclick="checkAvailability()" style="padding:4px 11px;font-size:11px">
+            🔍 Check availability
+          </button>
+        </div>
+        <div id="dl-check-status" style="font-size:11px;color:#64748b;margin-bottom:6px;min-height:16px"></div>
+
+        <div id="dl-progress" style="display:none;margin-bottom:10px">
+          <div class="progress-track"><div class="progress-bar" id="dl-bar"></div></div>
+          <div id="dl-status" style="font-size:11px;color:#94a3b8;margin-top:5px;min-height:16px"></div>
+        </div>
+
+        <div class="url-list" id="url-list"></div>
+      </div>
+      <div id="dl-panel-wget" style="display:none">
+        <div class="url-count-label">Save as <code style="color:#93c5fd">download_srtm.sh</code> · no credentials needed · run: <code style="color:#93c5fd">bash download_srtm.sh</code></div>
+        <div class="url-list" id="wget-script"></div>
+      </div>
+      <div id="dl-panel-python" style="display:none">
+        <div class="url-count-label">Plain <code style="color:#93c5fd">requests</code> — no authentication · <code style="color:#93c5fd">pip install requests</code></div>
+        <div class="url-list" id="python-script"></div>
+      </div>
+      <div id="dl-panel-otopo" style="display:none">
+        <div class="url-count-label">OpenTopography API — covers the bounding box of your selection</div>
+        <div class="url-list" id="otopo-script"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm-secondary" onclick="copyToClipboard()">Copy to Clipboard</button>
+      <button class="btn-sm-secondary" onclick="downloadManifest()">Download Manifest</button>
+      <button class="btn-sm-primary" id="btn-download-files" onclick="downloadTiles()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+        </svg>
+        Download DEM Files
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Notification toast -->
+<div id="notification"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════════════════════════ -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+<script>
+// ════════════════════════════════════════════════════════════
+// CONSTANTS
+// ════════════════════════════════════════════════════════════
+const SRTM = {
+  LON_MIN: -180, LON_MAX: 180
+};
+
+// OpenTopography public S3 mirror — anonymous access, CORS-enabled, GeoTIFF tiles.
+// (NASA's own LP DAAC Cloud endpoint requires an Earthdata login and sends no CORS
+//  headers, so its URLs can neither be clicked nor fetched from a web page.)
+const OT_BASE = 'https://opentopography.s3.sdsc.edu/raster';
+
+// Copernicus tiles encode lat as 2 digits, lon as 3, with `_00` sub-degree fields.
+function copName(res, tile) {
+  const { lat, lon } = parseTileName(tile);
+  const ns = lat >= 0 ? 'N' : 'S', ew = lon >= 0 ? 'E' : 'W';
+  const la = String(Math.abs(lat)).padStart(2, '0');
+  const lo = String(Math.abs(lon)).padStart(3, '0');
+  return `Copernicus_DSM_${res}_${ns}${la}_00_${ew}${lo}_00_DEM.tif`;
+}
+// ALOS tiles encode lat as 3 digits, lon as 3.
+function alosName(tile) {
+  const { lat, lon } = parseTileName(tile);
+  const ns = lat >= 0 ? 'N' : 'S', ew = lon >= 0 ? 'E' : 'W';
+  const la = String(Math.abs(lat)).padStart(3, '0');
+  const lo = String(Math.abs(lon)).padStart(3, '0');
+  return `ALPSMLC30_${ns}${la}${ew}${lo}_DSM.tif`;
+}
+
+// Each product: display label, resolution class, coverage band (latMin/latMax),
+// average per-tile size (MB, for the estimate), and its URL + saved-filename builders.
+// Coverage differs by mission — SRTM only reached 56°S–60°N, whereas Copernicus is
+// truly global and ALOS reaches ~82°.
+const PRODUCTS = {
+  SRTMGL1: {
+    label: 'SRTM GL1 — 1 arc-sec (~30 m)', res: '1arc', latMin: -56, latMax: 60, sizeMB: 14,
+    url:  t => `${OT_BASE}/SRTM_GL1/SRTM_GL1_srtm/${t}.tif`,
+    file: t => `${t}.tif`
+  },
+  NASADEM: {
+    label: 'NASADEM — void-filled SRTM (~30 m)', res: '1arc', latMin: -56, latMax: 60, sizeMB: 14,
+    url:  t => `${OT_BASE}/NASADEM/NASADEM_be/NASADEM_HGT_${t.toLowerCase()}.tif`,
+    file: t => `NASADEM_HGT_${t.toLowerCase()}.tif`
+  },
+  ALOS: {
+    label: 'ALOS AW3D30 — JAXA (~30 m)', res: '1arc', latMin: -82, latMax: 82, sizeMB: 20,
+    url:  t => `${OT_BASE}/AW3D30/AW3D30_global/${alosName(t)}`,
+    file: t => alosName(t)
+  },
+  COP30: {
+    label: 'Copernicus GLO-30 — TanDEM-X (~30 m)', res: '1arc', latMin: -90, latMax: 90, sizeMB: 50,
+    url:  t => `${OT_BASE}/COP30/COP30_hh/${copName('10', t)}`,
+    file: t => copName('10', t)
+  },
+  SRTMGL3: {
+    label: 'SRTM GL3 — 3 arc-sec (~90 m)', res: '3arc', latMin: -56, latMax: 60, sizeMB: 2,
+    url:  t => {
+      const { lat } = parseTileName(t);
+      const dir = lat < 0 ? 'South' : lat < 30 ? 'North/North_0_29' : 'North/North_30_60';
+      return `${OT_BASE}/SRTM_GL3/SRTM_GL3_srtm/${dir}/${t}.tif`;
+    },
+    file: t => `${t}.tif`
+  },
+  COP90: {
+    label: 'Copernicus GLO-90 — TanDEM-X (~90 m)', res: '3arc', latMin: -90, latMax: 90, sizeMB: 6,
+    url:  t => `${OT_BASE}/COP90/COP90_hh/${copName('30', t)}`,
+    file: t => copName('30', t)
+  }
+};
+
+// Products offered under each resolution toggle, in menu order.
+const RES_PRODUCTS = {
+  '1arc': ['SRTMGL1', 'NASADEM', 'ALOS', 'COP30'],
+  '3arc': ['SRTMGL3', 'COP90']
+};
+
+// Loaded on demand, only when a multi-tile ZIP is requested
+const JSZIP_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+
+// Parallel network requests
+const CONCURRENCY = 4;
+
+// Coverage band of the currently selected product (mutated by applyProduct).
+let COVERAGE = { latMin: PRODUCTS.SRTMGL1.latMin, latMax: PRODUCTS.SRTMGL1.latMax };
+
+// ════════════════════════════════════════════════════════════
+// LAND / DATA MASK
+// ════════════════════════════════════════════════════════════
+// 1°×1° bitmask of cells that actually have a DEM tile on the mirror (union of SRTM GL1
+// and Copernicus GLO-90). Ocean cells are absent — no grid is drawn and no tile can be
+// selected over open water. Bit index = (lat + 90) * 360 + (lon + 180).
+const LAND_MASK_B64 = "////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////DwDw////////////////////////////////////////////////////////AADA8////////////////wMA8P///////////////////////////////zwAAAAAwP//////////////PwAAAP///////////////////////////////wMAAAAAAMD8////////////AAAAAPz//////////////////////////////w8AAAAAAAAA8P//////////AwAAAPz//////////////////////////////z8AAAAAAAAAAAAA/P8//P//AwAAAAD///////////////////////////////8AAAAAAAAAAAAA8D8AwP//AAAAAADA//////////////////////////////8AAAAAAAAAAAAAAAAAwP//AAAAAAAA/////////////////////////////w8AAAAAAAAAAAAAAAAAAP//AAAAAAAAAPz8//P/////////////////////PwAAAAAAAAAAAAAAAAADAPz/AAAAAAAAAAAAAADw/P///z//////////////AwAAAwAAAAAAAAAAAAAAAMD/AAAAAAAAAAAAAAAAwP///wPw//////////8AAAMAAAAAAAAAAAAAAAAAAMD/AAAAAAAAAAAAAAAAAPA/AADw/////////z8AwAAAAAAAAAAAAAAAAAAAAAD/AwAAAAAAAAAAAAAAAAAPAAAADP8/PAAADAAAAAAAAAAAAAAAAAAAAAAAAAD8DwAAAAAAAAAAAAAAAAAAAAAAADwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwPwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAgAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPADAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAPwfAADgAQAAAIAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAP4BAABkAAAAAAAAAAAAAAAAADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/AAwAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAADAAAAAAAAAAAAAAAAAAAP/ABwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP9BAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAAAAAP8BAAAAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAP8HAAAAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAP8HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABiAAAAAAAAAAAAAAAAAAP8DAAAAAAAAAAAAAAAABsABAAAAAAAAAAAAAAAAAHwAAAAAAAAAAAAAAAAAAP8HAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAPwAGAAAAAAAAAAAAAAAAP8HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPgAGAAAAAAAAAAAAAAAAP4PAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOABAPADAAAAAAAAAAAAAAAAAP4fAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOABAMAHAAAAAAAAAAAAAAAAAP4/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPABAIAfAAAAAAAAAAAAAAAAAPx/AAAAAAAABgAAAAAAAAAAAAAAAAAAAAAAAPgBAAAfAAAAAAAAAAAAAAAAAPx/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANgBAAB+AAAAAAAAAAAAAAAAAPz/BwAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAP8AAAB8AAAAAAAAAAAAAAAAAPz/DwAAAACAAAAAAAAAAAAAAAACAAAAAAAAgP8HAAB8AAAAAAAAAAAAAAAAAPz/DwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAsP8HAAAeAAAAAAAAAAAAAAAAAPj/JwAAAAAAAAAAAAAAAAAAAAAAAAAAAAcA+P8HAAAOAAAAAAAAAAAAAAAAAPj/fwAAAAAAAAAAwD8AAAAAAAAAAAAAwP8A/P8PAAADAAAAAAAAAAAAAAAAKPD//wAAAAAAAAAA4P8AAAAAAAAAAAAAwP8B/P8PAAAAAAAAAAAAAAAAAAAAAPD//wEAAAAAAAAA4P8DAAAAAAAAAAAAgP8f//8fAAAAAgAAAAAAAAAAAAAAAPD//wMAAAAAAAAA4P8HAAAAAAAAAAAAgP////8/CAAAAgAAAAAAAAAAAAAAAPD//wMAAAAAAAAA4P8HAAAAAAAAAAAAwP////8/AAAABAAAAAAAAAAAAAAAAPD//wcAAAAAAAAA8P8PAAAAAAAAAAAAwP////8/AAgAAAAAAAAAAAAAAAAAAPD//w8AAAAAAAAA+P8fAAAAAAAAAAAA4P////8/AAgAAAAAABgAAABAAAAAAPD//w8AAAAAAAAA+P8fAAAAAAAAAAAA4P////8/AAAAAAAAAAAAAAAABAAAGOD//w8AAAAAAAAA/P8fAAAAAAAAAAAA4P////8/AAAAAAAAAAAAAgAAAAAAAOD//x8AAAAAAAAA/P9/AA8AAAAAAAAA8P////8/AAAAAAAAAAAAiAAAAAAAAOD//38AAAAAAAAA/P//gA8AAAAAAAAA4P////8/AAAAAAAAQAE0AgAAAAAAAOD///8HAAAAAAAA/P//gA8AAAAAAAAA4P////+fAAAACAAAGAAqAAAAAAAAAOD///8PAAAAAAAA/P//kB8AAAAAAAAA4P////+XAJ4BMgBQAoAbAAAAAAAAAOD///8PAAAAAAAA/v//iB8IAAAAAAAA4P//////DB8AMgBgABADAAAAAAAAAOD///8PwAAAAAAA/v//gB8oAAAAAAAAgP////9HgC8AMwRgAMwDAAAAAAAAAOD///8fAAAAAAAA////AD8gCAAAAAAAAPz///8BjGHgYwQRAOAPAAAAAAAAAOD///8fAAAAAACA////gz8AAAAAAAAAAOD//38AwDDgAwAB4PwCAAAAAAAAAPj///8/AAAAAACA////zz8AAAAAAAAAAMz//3+dQBDwAwAAfv4AAAAAAAAAAP7///8/AAAAQACA////n3+AAAAAAAAAAMD//38GABjgUQAAgq8AAAAAAAAAAP////8/AAAAQACA////H34EAAAAAAAAAID/Pz4CABwABg8AgE8CAAAAAAAAgP////8/AAAAAAAA////H3gAAAAAAAAAAKD/Hz4AABwAiAEBAAAAAAAAAAAAgP////8/AAAAAAAA////H3oAAAAAAAAAACDuHx4AAAwAAAAAAAAAAAAAAAAAwP////9/AAAAAAAA////nzMAAAAAABAAAMDAHw4AABAwAEEAEAAAAAAAAAAAwP////9/AAAAAAAA/v//nygAAAAAABAAAEDAHx54GGQAAEAMKAADAAAAAAAA4P//////AAAAAAAA/v//H4gQAAAAAAAgAPgBE44/YAaAAAFkIIADAAAAAAAA4P//////AQAAAAAA////D8wAAAAAAAAAAJ8HAN8/fAiAgABgAIABAAAAAAAA8P//////AwAAAAAA/v//DwAAAAAAAAAA/P//4O8ffwDAAAAAAIAAAAAAAAAA8P//////AwAgAAAA////DwARABAAAADg//b+5P+AHwBgAAAAAAAAAAAAAAAA/P//////AwAAAAAA////DwADAAgAAADg/33lxf/PAwAwAAAAAQAAAAAAAAAA/P//////AQAAAACA////DwAKABgAAAD8Vf7J5//fCAAQoAEAAgAAAAAAAAAA/P//////AAAAAACA////DwAKAAAAAAA+wP3g/3/+CwAAIAMAAgAAAAAAAAAA+P////8/DAAAAADA////HwAIAAAAAAD//f/+/x98AAAAAAEAAAAAAAAAAAAA/P////8fAAAAAADg////PwAAAAAAAID//////+cfAAAYAAAAAAAAAAAAAAAH/P////8AAAAAAADy////fwAAAAAAAMB///v///wHAAAcAAAYAAAAAAAAAAAH+P///z8AAAAAAAD0////fwAAACAAAOA//vv4HyAAACQECAAAAAAAAAAAAAAH+P///wcAAAAAAADk/////wAAADAAAODf///9BAAAAAADAABAAAAAAAAAAIAB8P///wcAAAAAAADo/////wMAACAAAODf/3+fAABAAAADAABAAAAAAAAAAAAA4P///wMAAAAAAADg/////wcAADAAAPj/+weaAAAAAAACAAAQAAAAAAAAAAAA5P///wMAAAAAAADw/////w8AADAAAPjv8QOGAABAAAADAAAIAAAAAAAAAAAAxP///wEAAAAAfAb+/////x8AADAAAHiP4R+OAQAAABAAAAACAAAAAAAAAAAQwP///wAAAAAA/j///////x8AADAQAHwPwD8HAQAgwjABAAACAAAAAAAAAAAAwP//HwAAAAAA/////////z8AADA4AIoHgPcHBAwaHqABAAAAAAAAAAAAAAAA/v//AwAAAADA/////////z8AADA4AMIBIOcHBPiaBpAAAAAAAAAAAAAAAAAA////AQAAAADA/////////38AACA/AONxuM8HJNFeAN4AAAAAAAAAAAAAAADA////AAAAAADg/////////38AAAAfAOF9wv4HwCEAEG4AAAAAAAAAAABAAADAAf//AAAAAADw//////////8AALAPAOH8wfwHgAAAAHYAAAAAAAAAAAAAAADgAf7bAAAAAAD4//////////gAALAPAOP8w/gDAAAAQC4AAAAAAAAAAAAAAADwB/hBAAAAAAD4/////////wMHAMgfAOP/A/gDAAAAAEAAAAAAAAAAAAAAAAD/DQDAAQAAAAD4/////////x8AAMAfAOf/A/ABABAAAAAAAAAAAAAAAAAAAID/CwDAAAAAABj8/////////38AAMAfAOL/A/ABACAAADAAAAAAAAAAAAAAANz/MwBQAAAAADj8//////////8BAOA/AOz/C3oAACAAAAAAAAQAAAAAAAAAgP9/AQBgAAAAACz4//////////8PAOB/APz/GXgAAGAAAAAAAAAAAAAAAAAA4P8fwRF/AAAAAAz4////////7/8fAOD/APz/AHAAACAAAAAAAAAAAQAAAAA6+P8f4P8/AAAAAAD4////////9/8/APD/Af5/B3AAACAAAAAAAACAAwAAAAAo/B8f3P8AAAAAAAD4//////////8/APD/B/9/D2AAACAAAAQAAADAAQAAAAAA/I8/8A8AAAAAAAD8////////+/9/APz/D///BmEAEDAAAAAAAAD4AAAAAAAA/ge+/x0AAAAAAAD8////////////AP7/////fzAAAAAAAAAAAAAYAAAAAABg/geFfw8AAAAAAAD4/////////f//AP///////zEAAAAAAAAAAKAEAAAAAABg/wcA3wcAAAAAAAD4////////////gP///////zsAAAAAAAAAABgAAAAAAAD5/wcA/gMAAAAAAADw//////////8/wP////////+DAAIgAAAAABkAAAAAAAD4/wcA/AAAAAAAAADg//////9////9/////////++BAAIAAAAAQAAAAAAAAADe/wcA/gAAAAAAAADg///////////+/////////x+cAAQAAAAAEAAAAAAAAAD//w8AbgAAAAAAAADe/////////////////////z84AAUAAAAABgAAAAAAACD//x8EDgAAAAAAAAD+/////////9///////////39wAAAAAAAAAAAAAAAAACD////PDwAAAAAAAABA/v///////////////////38gAAEAAAAAAAAAAAAAAID/////BwAAAAAAAAAY/P///////////////////3/gAAEAAAAAAAAAAAAAAID/////DwAAAAAAAAAA/P//v////////////////3/wgAEAAAAAAAAAAAAAAOD/////HwAIAAAAAAAM/P//jx/A/////////////z/wgwAAAAAAAAAAAAAAAPj/////fwAAAAAAAAAI+P//AACA/////////////x/03wAAAAAAAAAAAAAAAPj//////wAAAAAAAAAA4P//AHjw/////////////x/+/wAAAAAAAAAAAAAAAPz//////wEAAAAAAAAA4P//Bfjw/////////////x8+/wEAAAAAAAAAAAAAAP7//////wEAAAAAAAQA+Pf/Df7//////////////38++wEAAAAAAAAAAAAAAP///////wEAAAAAAAwA+A/8H////////////////3//8AMAAAAAAAAAAAAAAP///////wMAAAAAgAEA/D8wP////////////////zcfwAMAAAAAAAAAAAAAgP///////wMAAAAAkAEA/P8x+P///////////////+8fgAcAAAAAAAAAAAAAgP///////w8AAAAAAAAA+J8x//////////////////8/gAMAAAAAAAAAAAAAgP///////38AAAAAAAAA+P+wv/////////////////9/gAsAAAAAAAAAAAAAgP///////z8AAAAAAAAA/P/0///h8P//////////////hz8AAAAAAAAAAAAAgP////////+OAQAAAAAA/P//+/8B+P//////////////D38AAAAAAAAAAAAAgP////////9/AQAAAAAAAPz////j/v//////////////H/4AAAAAAAAAAAAAgP//////////AQAAAAAAAPz////3////////////////P4cHAAAAAAAAAAAAgP//////////+QAAAAAAAP7/////////////////////fw4eAAAAAAAAAAAAgP///////////wAAAAAAgP///////////////////////w4wAAAAAAAAAAAAwP////////8P/wAAAAAAwP///////////////////////xdgAAAAAAAAAAAA8P////////9/fgAAAAAAYP7//////////////////////x3AAAAAAAAAAAAA/P//////////HwAAAAAAwP///////////////////////w3AAQAAHwAAAAAA+///////////HwAAAAAA3v///////////////////////w8ABwDg+A8AAACA////////////HwAAAAAA/j///////////////////////w8ABwDvADwAAADA////////////HwAAAAAA/h///////////////////////w+AHwABAOAfAADA////////////DwAAAAAA/g/4/////////////////////wWAfxwAAAC/AQDg////////+///AwAAAAAA+AfwD///////////////////fwCAfwYAAAT8BgDw//////8f+P//AAAAAAAA8APwX///////////////////fwiA/wAAAAbgDwD4//////8H8P9/AAAAAABA+Af8//7//////////////////wEA/wAAAAD+HwD+//////8A+P8/AAAAAAAA8AP+//7//////////////////wcc/gEAAPD//9v//////z8A+P8eAMABAAAA4Af/////////////////////////+EcAwPD//////////z8A8P8PAPwDAAAAAA////////////////////////////8DAPD///////////8A/P8PAPwDAAAAMAD/P/////////////////////////8PAMz///////////8D//8/AP8PAAAAMAD/////////////////////////////AM////////////////w/wP8PAPAPAAD8////////////////////////////8Pz///////////////8/wP8/APz/AADw////////////////////////////////////////////8///wP//A/z/AADA////////////////////////////////////////////D///8P//D/A/AADA/////////////////////////////8D/////////////z///8P//DwAAAADA////////////////////////////D/D///////////////8PwP///w8AAAAA////z///////////////////////AAD///////////////8D8P///z8AAAAA/P//A/DA////////////////////AwD//z8A//D///z///8D8P////8ADAAAwP8PAAD/w/////////////////DAPwDAAwAA8P//z////z8A8P////8APAAAAPwDAMA/wP//////////////DwDAAAAAAAAAwP///////wMA/P////8AAAAAAAAAAMA/AP////////8/wP8PAAAAAAAAAAAAwP///////wAA/P////8AAAAAAAAAAAD/AM////////8//A8AAAAAAAAAAAAAwP//w///PwAA//////8PAAAAwAAAAAD8AwDM/////wMA/M8PAAAAAAAAAAAAAP//////PwDP//////8PAAAAAAAAAAD8/wDw/P//PwAA/P8/AAAAAAAAAAAAAP////////z///////8DAAAAPD8AAADA/wMA8P//PwAA8A8zDAAAAAAAAAAAAPz///////////////8PAAAA/z8AAAAAwADA8P//AwAAAAAAAwAAAAAAAAAAAAD//P////////////8PAADA/88PAAAAAAAAAP//AAAAAAAAAAAAAAAAAAAAAAAA/P////////////8PAADA//8MAPDAAAADwP8/AAAAAAAAAAAAAAAAAAAAAAAA8P//////////////AAAA////D////wD/8P8AAAAAAAAAAAAAAAAAAAAAAAAAAPD/////////////DwAAAAAAAPD//wAA8P8AAAAAAAAAAAAAAAAAAAAAAAAAAAD///////////8PAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8P8AAPD//w8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+const LAND_MASK = (() => {
+  const bin = atob(LAND_MASK_B64);
+  const a = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i);
+  return a;
+})();
+function hasLand(lat, lon) {
+  const la = Math.floor(lat), lo = Math.floor(lon);
+  if (la < -90 || la >= 90 || lo < -180 || lo >= 180) return false;
+  const idx = (la + 90) * 360 + (lo + 180);
+  return (LAND_MASK[idx >> 3] & (1 << (idx & 7))) !== 0;
+}
+
+// ════════════════════════════════════════════════════════════
+// UTILITY — tile naming
+// ════════════════════════════════════════════════════════════
+function getTileName(lat, lon) {
+  const tLat = Math.floor(lat);
+  const tLon = Math.floor(lon);
+  return (tLat >= 0 ? 'N' : 'S') +
+         String(Math.abs(tLat)).padStart(2, '0') +
+         (tLon >= 0 ? 'E' : 'W') +
+         String(Math.abs(tLon)).padStart(3, '0');
+}
+
+function parseTileName(name) {
+  const lat = (name[0] === 'N' ? 1 : -1) * parseInt(name.substring(1, 3));
+  const lon = (name[3] === 'E' ? 1 : -1) * parseInt(name.substring(4, 7));
+  return { lat, lon };
+}
+
+function tileURL(tileName, product) {
+  return PRODUCTS[product].url(tileName);
+}
+
+function tileFileName(tileName, product) {
+  return PRODUCTS[product].file(tileName);
+}
+
+function isInCoverage(lat, lon) {
+  return lat >= COVERAGE.latMin && lat < COVERAGE.latMax &&
+         lon >= SRTM.LON_MIN && lon < SRTM.LON_MAX;
+}
+
+function formatSize(mb) {
+  if (mb === 0) return '—';
+  return mb >= 1000 ? (mb / 1000).toFixed(1) + ' GB' : mb + ' MB';
+}
+
+// ════════════════════════════════════════════════════════════
+// UTILITY — geometry
+// ════════════════════════════════════════════════════════════
+function pointInRing(px, py, ring) {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const xi = ring[i][0], yi = ring[i][1];
+    const xj = ring[j][0], yj = ring[j][1];
+    if ((yi > py) !== (yj > py) && px < ((xj - xi) * (py - yi)) / (yj - yi) + xi)
+      inside = !inside;
+  }
+  return inside;
+}
+
+function pointInGeometry(lng, lat, geom) {
+  if (geom.type === 'Polygon') {
+    if (!pointInRing(lng, lat, geom.coordinates[0])) return false;
+    for (let h = 1; h < geom.coordinates.length; h++)
+      if (pointInRing(lng, lat, geom.coordinates[h])) return false;
+    return true;
+  }
+  if (geom.type === 'MultiPolygon') {
+    return geom.coordinates.some(poly => {
+      if (!pointInRing(lng, lat, poly[0])) return false;
+      for (let h = 1; h < poly.length; h++)
+        if (pointInRing(lng, lat, poly[h])) return false;
+      return true;
+    });
+  }
+  return false;
+}
+
+function geomBBox(geom) {
+  const pts = geom.type === 'Polygon'
+    ? geom.coordinates.flat()
+    : geom.coordinates.flat(2);
+  let minLng = Infinity, maxLng = -Infinity, minLat = Infinity, maxLat = -Infinity;
+  pts.forEach(([lg, la]) => {
+    if (lg < minLng) minLng = lg; if (lg > maxLng) maxLng = lg;
+    if (la < minLat) minLat = la; if (la > maxLat) maxLat = la;
+  });
+  return { minLng, maxLng, minLat, maxLat };
+}
+
+function tilesFromGeometry(geom) {
+  const bb = geomBBox(geom);
+  const tiles = [];
+  const latLo = Math.max(Math.floor(bb.minLat), COVERAGE.latMin);
+  const latHi = Math.min(Math.floor(bb.maxLat), COVERAGE.latMax - 1);
+  const lonLo = Math.max(Math.floor(bb.minLng), SRTM.LON_MIN);
+  const lonHi = Math.min(Math.floor(bb.maxLng), SRTM.LON_MAX - 1);
+  for (let la = latLo; la <= latHi; la++)
+    for (let lo = lonLo; lo <= lonHi; lo++)
+      if (hasLand(la, lo) && pointInGeometry(lo + 0.5, la + 0.5, geom))
+        tiles.push(getTileName(la, lo));
+  return tiles;
+}
+
+// ════════════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════════════
+const selectedTiles = new Set();
+let currentTool     = 'click';
+let currentProduct  = 'SRTMGL1';
+let activeDrawer    = null;
+let activeDlTab     = 'urls';
+
+// ════════════════════════════════════════════════════════════
+// MAP
+// ════════════════════════════════════════════════════════════
+const map = L.map('map', { center: [20, 0], zoom: 3, zoomControl: false });
+L.control.zoom({ position: 'topright' }).addTo(map);
+L.control.scale({ position: 'bottomright', maxWidth: 150 }).addTo(map);
+
+const baseDark = L.tileLayer(
+  'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+  { attribution: '© OpenStreetMap contributors, © CARTO', maxZoom: 19 }
+);
+const baseOSM = L.tileLayer(
+  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  { attribution: '© OpenStreetMap contributors', maxZoom: 19 }
+);
+baseDark.addTo(map);
+L.control.layers({ 'Dark (CartoDB)': baseDark, 'OpenStreetMap': baseOSM }, {},
+  { position: 'topright' }).addTo(map);
+
+// ════════════════════════════════════════════════════════════
+// SRTM CANVAS LAYER
+// ════════════════════════════════════════════════════════════
+const SRTMLayer = L.Layer.extend({
+  onAdd(map) {
+    this._map = map;
+    const c = this._canvas = document.createElement('canvas');
+    c.style.cssText = 'position:absolute;top:0;left:0;pointer-events:none;z-index:400;';
+    map.getContainer().appendChild(c);
+    map.on('move zoom moveend zoomend resize', this._redraw, this);
+    this._resize();
+    this._redraw();
+  },
+  onRemove(map) {
+    map.off('move zoom moveend zoomend resize', this._redraw, this);
+    this._canvas.remove();
+  },
+  _resize() {
+    const s = this._map.getSize();
+    this._canvas.width = s.x; this._canvas.height = s.y;
+  },
+  _redraw() {
+    const map = this._map;
+    const s = map.getSize();
+    if (this._canvas.width !== s.x || this._canvas.height !== s.y) this._resize();
+    const ctx = this._canvas.getContext('2d');
+    ctx.clearRect(0, 0, s.x, s.y);
+
+    const zoom = map.getZoom();
+    if (zoom >= 3) this._drawGrid(ctx);
+    this._drawBoundary(ctx);
+    for (const t of selectedTiles) this._drawTile(ctx, t);
+  },
+  _drawBoundary(ctx) {
+    const map = this._map;
+    const b = map.getBounds();
+    ctx.strokeStyle = 'rgba(239,68,68,0.65)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([7, 4]);
+    // Draw the current product's coverage edges, but not lines that sit at the poles
+    // (a global product has no meaningful boundary to show).
+    [COVERAGE.latMax, COVERAGE.latMin].forEach(lat => {
+      if (Math.abs(lat) >= 89.5) return;
+      const p1 = map.latLngToContainerPoint([lat, b.getWest()]);
+      const p2 = map.latLngToContainerPoint([lat, b.getEast()]);
+      ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+    });
+    ctx.setLineDash([]);
+  },
+  _drawGrid(ctx) {
+    const map = this._map;
+    const zoom = map.getZoom();
+    const b = map.getBounds();
+    const latLo = Math.max(Math.floor(b.getSouth()), COVERAGE.latMin);
+    const latHi = Math.min(Math.ceil(b.getNorth()),  COVERAGE.latMax) - 1;
+    const lonLo = Math.floor(b.getWest());
+    const lonHi = Math.ceil(b.getEast()) - 1;
+
+    // Outline only the 1°×1° cells that actually have a DEM tile — ocean stays blank so
+    // users aren't tempted to select empty water. One Path2D, one stroke, for speed.
+    ctx.strokeStyle = 'rgba(148,163,184,0.22)';
+    ctx.lineWidth = zoom >= 6 ? 0.8 : 0.5;
+    const path = new Path2D();
+    for (let la = latLo; la <= latHi; la++)
+      for (let lo = lonLo; lo <= lonHi; lo++) {
+        if (!hasLand(la, lo)) continue;
+        const tl = map.latLngToContainerPoint([la + 1, lo]);
+        const br = map.latLngToContainerPoint([la, lo + 1]);
+        path.rect(tl.x, tl.y, br.x - tl.x, br.y - tl.y);
+      }
+    ctx.stroke(path);
+
+    // Tile name labels at high zoom (land cells only)
+    if (zoom >= 7) {
+      ctx.fillStyle = 'rgba(148,163,184,0.55)';
+      ctx.font = '9px monospace';
+      ctx.textAlign = 'center';
+      for (let la = latLo; la <= latHi; la++)
+        for (let lo = lonLo; lo <= lonHi; lo++) {
+          if (!hasLand(la, lo)) continue;
+          const cp = map.latLngToContainerPoint([la + 0.5, lo + 0.5]);
+          ctx.fillText(getTileName(la, lo), cp.x, cp.y + 3);
+        }
+    }
+  },
+  _drawTile(ctx, name) {
+    const map = this._map;
+    const { lat, lon } = parseTileName(name);
+    const sw = map.latLngToContainerPoint([lat, lon]);
+    const ne = map.latLngToContainerPoint([lat + 1, lon + 1]);
+    const x = Math.min(sw.x, ne.x), y = Math.min(sw.y, ne.y);
+    const w = Math.abs(ne.x - sw.x), h = Math.abs(ne.y - sw.y);
+    ctx.globalAlpha = 0.42;
+    ctx.fillStyle = '#3b82f6';
+    ctx.fillRect(x, y, w, h);
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = '#60a5fa';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(x, y, w, h);
+  }
+});
+
+const srtmLayer = new SRTMLayer();
+srtmLayer.addTo(map);
+
+// ════════════════════════════════════════════════════════════
+// MAP EVENTS
+// ════════════════════════════════════════════════════════════
+map.on('click', e => {
+  if (currentTool !== 'click') return;
+  const { lat, lng } = e.latlng;
+  if (!isInCoverage(lat, lng)) {
+    notify(`Outside coverage for ${currentProduct}`, 'error'); return;
+  }
+  if (!hasLand(lat, lng)) {
+    notify('No DEM data here (ocean)', 'info'); return;
+  }
+  const name = getTileName(lat, lng);
+  if (selectedTiles.has(name)) {
+    selectedTiles.delete(name);
+    notify(`Deselected ${name}`, 'info');
+  } else {
+    selectedTiles.add(name);
+    notify(`Selected ${name}`, 'success');
+  }
+  updateUI();
+  srtmLayer._redraw();
+});
+
+// Hover tooltip
+map.on('mousemove', e => {
+  if (currentTool !== 'click') return;
+  const tt = document.getElementById('tile-tooltip');
+  const { lat, lng } = e.latlng;
+  if (!isInCoverage(lat, lng) || !hasLand(lat, lng)) { tt.style.display = 'none'; return; }
+  const name = getTileName(lat, lng);
+  tt.textContent = name + (selectedTiles.has(name) ? ' ✓' : '');
+  tt.style.display = 'block';
+  tt.style.left = (e.containerPoint.x + 12) + 'px';
+  tt.style.top  = (e.containerPoint.y - 28) + 'px';
+});
+map.on('mouseout', () => { document.getElementById('tile-tooltip').style.display = 'none'; });
+
+// Leaflet.draw events
+map.on(L.Draw.Event.CREATED, e => {
+  const layer = e.layer;
+  if (e.layerType === 'rectangle') {
+    selectTilesInBounds(layer.getBounds());
+  } else if (e.layerType === 'polygon') {
+    const lls = layer.getLatLngs()[0];
+    const ring = lls.map(ll => [ll.lng, ll.lat]);
+    ring.push(ring[0]);
+    const tiles = tilesFromGeometry({ type: 'Polygon', coordinates: [ring] });
+    tiles.forEach(t => selectedTiles.add(t));
+    notify(`Selected ${tiles.length} tile${tiles.length !== 1 ? 's' : ''}`, 'success');
+  }
+  setTool('click');
+  updateUI();
+  srtmLayer._redraw();
+});
+
+map.on(L.Draw.Event.DRAWSTOP, () => {
+  if (currentTool !== 'click') setTool('click');
+});
+
+// ════════════════════════════════════════════════════════════
+// TOOL MANAGEMENT
+// ════════════════════════════════════════════════════════════
+function setTool(tool) {
+  if (activeDrawer) { activeDrawer.disable(); activeDrawer = null; }
+  currentTool = tool;
+  document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+  const ids = { click: 'btn-click', rect: 'btn-rect', polygon: 'btn-polygon', visible: 'btn-visible' };
+  document.getElementById(ids[tool] || 'btn-click')?.classList.add('active');
+
+  if (tool === 'rect') {
+    activeDrawer = new L.Draw.Rectangle(map, { shapeOptions: { color: '#3b82f6', fillOpacity: 0.08, weight: 2 } });
+    activeDrawer.enable();
+  } else if (tool === 'polygon') {
+    activeDrawer = new L.Draw.Polygon(map, { allowIntersection: false, shapeOptions: { color: '#3b82f6', fillOpacity: 0.08, weight: 2 } });
+    activeDrawer.enable();
+  }
+}
+
+function selectVisibleTiles() {
+  selectTilesInBounds(map.getBounds());
+}
+
+function selectTilesInBounds(bounds) {
+  const sw = bounds.getSouthWest(), ne = bounds.getNorthEast();
+  const latLo = Math.max(Math.floor(sw.lat), COVERAGE.latMin);
+  const latHi = Math.min(Math.floor(ne.lat), COVERAGE.latMax - 1);
+  const lonLo = Math.max(Math.floor(sw.lng), SRTM.LON_MIN);
+  const lonHi = Math.min(Math.floor(ne.lng), SRTM.LON_MAX - 1);
+  let count = 0;
+  for (let la = latLo; la <= latHi; la++)
+    for (let lo = lonLo; lo <= lonHi; lo++) {
+      if (!hasLand(la, lo)) continue;   // skip ocean cells with no data
+      selectedTiles.add(getTileName(la, lo)); count++;
+    }
+  notify(count ? `Selected ${count} tile${count !== 1 ? 's' : ''}` : 'No land tiles in that area', count ? 'success' : 'info');
+  updateUI();
+  srtmLayer._redraw();
+}
+
+// ════════════════════════════════════════════════════════════
+// COUNTRY SEARCH
+// ════════════════════════════════════════════════════════════
+document.getElementById('country-input').addEventListener('keydown', e => { if (e.key === 'Enter') searchCountry(); });
+
+async function searchCountry() {
+  const q = document.getElementById('country-input').value.trim();
+  if (!q) return;
+  const st = document.getElementById('country-status');
+  st.innerHTML = '<span class="loader"></span> Searching…';
+
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&polygon_geojson=1&limit=5&featuretype=country`;
+    const res = await fetch(url, { headers: { 'Accept-Language': 'en' } });
+    if (!res.ok) throw new Error('Network error');
+    const data = await res.json();
+    const item = data.find(d => d.geojson && (d.type === 'administrative' || d.class === 'boundary')) || data.find(d => d.geojson);
+    if (!item) { st.innerHTML = '<span style="color:#ef4444">Country not found</span>'; return; }
+
+    const tiles = tilesFromGeometry(item.geojson);
+    tiles.forEach(t => selectedTiles.add(t));
+    updateUI();
+    srtmLayer._redraw();
+
+    if (item.boundingbox) {
+      const bb = item.boundingbox.map(Number);
+      map.fitBounds([[bb[0], bb[2]], [bb[1], bb[3]]]);
+    }
+    const label = item.display_name.split(',')[0];
+    st.innerHTML = `<span style="color:#22c55e">✓ ${tiles.length} tiles selected for ${label}</span>`;
+    notify(`${tiles.length} tiles selected for ${label}`, 'success');
+  } catch {
+    st.innerHTML = '<span style="color:#ef4444">Search failed — check connection</span>';
+    notify('Country search failed', 'error');
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+// GEOJSON UPLOAD
+// ════════════════════════════════════════════════════════════
+document.getElementById('geojson-file').addEventListener('change', handleGeoJSONFile);
+
+function handleGeoJSONFile(evt) {
+  const file = evt.target.files[0];
+  if (!file) return;
+  if (file.size > 25 * 1024 * 1024) { notify('File too large (max 25 MB)', 'error'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      let raw = JSON.parse(e.target.result);
+      let geom = null;
+      if (raw.type === 'FeatureCollection') geom = raw.features[0]?.geometry;
+      else if (raw.type === 'Feature')       geom = raw.geometry;
+      else if (['Polygon','MultiPolygon'].includes(raw.type)) geom = raw;
+      if (!geom) { notify('No polygon geometry found in GeoJSON', 'error'); return; }
+      const tiles = tilesFromGeometry(geom);
+      tiles.forEach(t => selectedTiles.add(t));
+      updateUI(); srtmLayer._redraw();
+      const bb = geomBBox(geom);
+      map.fitBounds([[bb.minLat, bb.minLng], [bb.maxLat, bb.maxLng]]);
+      notify(`${tiles.length} tiles selected from GeoJSON`, 'success');
+    } catch { notify('Failed to parse GeoJSON', 'error'); }
+  };
+  reader.readAsText(file);
+  evt.target.value = '';
+}
+
+const uploadArea = document.getElementById('upload-area');
+uploadArea.addEventListener('dragover',  e => { e.preventDefault(); uploadArea.style.borderColor = '#3b82f6'; });
+uploadArea.addEventListener('dragleave', () => { uploadArea.style.borderColor = ''; });
+uploadArea.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadArea.style.borderColor = '';
+  const file = e.dataTransfer.files[0];
+  if (file) handleGeoJSONFile({ target: { files: [file], value: '' } });
+});
+
+// ════════════════════════════════════════════════════════════
+// RESOLUTION / PRODUCT
+// ════════════════════════════════════════════════════════════
+function setResolution(res) {
+  document.getElementById('res-1arc').classList.toggle('active', res === '1arc');
+  document.getElementById('res-3arc').classList.toggle('active', res === '3arc');
+  const sel  = document.getElementById('product-select');
+  const opts = RES_PRODUCTS[res];
+  sel.innerHTML = opts.map(p => `<option value="${p}">${PRODUCTS[p].label}</option>`).join('');
+  applyProduct(opts[0]);
+}
+
+document.getElementById('product-select').addEventListener('change', function () {
+  applyProduct(this.value);
+});
+
+// Switch product: update coverage band, redraw the boundary/grid, refresh stats.
+function applyProduct(product) {
+  currentProduct = product;
+  COVERAGE = { latMin: PRODUCTS[product].latMin, latMax: PRODUCTS[product].latMax };
+  srtmLayer._redraw();
+  updateUI();
+}
+
+// ════════════════════════════════════════════════════════════
+// UI UPDATE
+// ════════════════════════════════════════════════════════════
+function updateUI() {
+  const n = selectedTiles.size;
+  const mb = n * PRODUCTS[currentProduct].sizeMB;
+  document.getElementById('stat-tiles').textContent = n.toLocaleString();
+  document.getElementById('stat-size').textContent  = formatSize(mb);
+  document.getElementById('stat-res').textContent   = PRODUCTS[currentProduct].res === '3arc' ? '90m' : '30m';
+  document.getElementById('btn-download').disabled  = n === 0;
+  updateTilesList();
+}
+
+function updateTilesList() {
+  const container = document.getElementById('tiles-list-container');
+  if (selectedTiles.size === 0) {
+    container.innerHTML = '<div class="tiles-empty">No tiles selected yet.<br>Use the tools in the Tools tab.</div>';
+    return;
+  }
+  const sorted = Array.from(selectedTiles).sort();
+  container.innerHTML = `
+    <div class="tiles-count">${sorted.length} tile${sorted.length !== 1 ? 's' : ''} — click a chip to remove</div>
+    <div class="tiles-chips">
+      ${sorted.map(t => `<span class="tile-chip" onclick="removeTile('${t}')" title="Remove ${t}">${t}</span>`).join('')}
+    </div>`;
+}
+
+function removeTile(name) {
+  selectedTiles.delete(name);
+  updateUI();
+  srtmLayer._redraw();
+}
+
+function zoomToSelection() {
+  if (!selectedTiles.size) { notify('No tiles selected', 'info'); return; }
+  let mnLa = Infinity, mxLa = -Infinity, mnLo = Infinity, mxLo = -Infinity;
+  selectedTiles.forEach(n => {
+    const { lat, lon } = parseTileName(n);
+    if (lat < mnLa) mnLa = lat; if (lat + 1 > mxLa) mxLa = lat + 1;
+    if (lon < mnLo) mnLo = lon; if (lon + 1 > mxLo) mxLo = lon + 1;
+  });
+  map.fitBounds([[mnLa, mnLo], [mxLa, mxLo]]);
+}
+
+function clearAll() {
+  selectedTiles.clear();
+  updateUI();
+  srtmLayer._redraw();
+  document.getElementById('country-status').innerHTML = '';
+  notify('Selection cleared', 'info');
+}
+
+// ════════════════════════════════════════════════════════════
+// TABS
+// ════════════════════════════════════════════════════════════
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    const name = t.dataset.tab;
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById(`tab-${name}`)?.classList.add('active');
+  });
+});
+
+// ════════════════════════════════════════════════════════════
+// IN-BROWSER DOWNLOADER
+// ════════════════════════════════════════════════════════════
+// Tiles are fetched straight from the OpenTopography S3 mirror. Ocean-only
+// tiles simply do not exist there and come back 404 — those are skipped, not
+// treated as errors.
+let _dlRunning = false;
+let _dlAbort   = null;
+
+const DOWNLOAD_BTN_LABEL = document.getElementById('btn-download-files').innerHTML;
+
+function saveBlob(blob, filename) {
+  const a = Object.assign(document.createElement('a'), {
+    href: URL.createObjectURL(blob),
+    download: filename
+  });
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 60_000);
+}
+
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = resolve;
+    s.onerror = () => reject(new Error('Could not load ' + src));
+    document.head.appendChild(s);
+  });
+}
+
+// Runs `worker` over `items` with at most CONCURRENCY in flight at once.
+async function pool(items, worker) {
+  let next = 0;
+  const runners = Array.from({ length: Math.min(CONCURRENCY, items.length) }, async () => {
+    while (next < items.length) {
+      const i = next++;
+      await worker(items[i], i);
+    }
+  });
+  await Promise.all(runners);
+}
+
+async function fetchTile(tile, product, signal) {
+  const res = await fetch(tileURL(tile, product), { signal });
+  if (res.status === 404 || res.status === 403) return null;  // no data for this tile
+  if (!res.ok) throw new Error(`${tile}: HTTP ${res.status}`);
+  return res.blob();
+}
+
+function setDlProgress(done, total, note) {
+  document.getElementById('dl-bar').style.width = total ? `${(done / total) * 100}%` : '0%';
+  document.getElementById('dl-status').innerHTML = note;
+}
+
+function showDlProgress(show) {
+  document.getElementById('dl-progress').style.display = show ? '' : 'none';
+}
+
+async function downloadTiles() {
+  if (_dlRunning) { _dlAbort?.abort(); return; }
+
+  const tiles = Array.from(selectedTiles).sort();
+  if (!tiles.length) return;
+
+  const estMB = tiles.length * PRODUCTS[currentProduct].sizeMB;
+  if (estMB > 1000 && !confirm(
+      `This will download roughly ${formatSize(estMB)} into your browser's memory before saving.\n\n` +
+      `For selections this large the wget or Python script is a better choice. Continue anyway?`)) {
+    return;
+  }
+
+  _dlRunning = true;
+  _dlAbort   = new AbortController();
+  const btn  = document.getElementById('btn-download-files');
+  btn.textContent = '■ Cancel';
+  showDlProgress(true);
+
+  const blobs   = [];
+  const missing = [];
+  const failed  = [];
+  let done = 0;
+
+  try {
+    setDlProgress(0, tiles.length, `<span class="loader"></span> Starting…`);
+    await pool(tiles, async tile => {
+      try {
+        const blob = await fetchTile(tile, currentProduct, _dlAbort.signal);
+        if (blob) blobs.push({ name: tileFileName(tile, currentProduct), blob });
+        else missing.push(tile);
+      } catch (err) {
+        if (err.name === 'AbortError') throw err;
+        failed.push(tile);
+      }
+      done++;
+      setDlProgress(done, tiles.length,
+        `<span class="loader"></span> Downloaded ${done} / ${tiles.length} tiles…`);
+    });
+
+    if (!blobs.length) {
+      setDlProgress(0, 1, `<span style="color:#f59e0b">No data available for any selected tile (ocean or outside coverage).</span>`);
+      notify('No DEM data for this selection', 'error');
+      return;
+    }
+
+    if (blobs.length === 1) {
+      saveBlob(blobs[0].blob, blobs[0].name);
+    } else {
+      setDlProgress(tiles.length, tiles.length, `<span class="loader"></span> Building ZIP archive…`);
+      if (!window.JSZip) await loadScript(JSZIP_CDN);
+      const zip = new JSZip();
+      blobs.forEach(({ name, blob }) => zip.file(name, blob));
+      const archive = await zip.generateAsync({ type: 'blob' }, meta => {
+        setDlProgress(meta.percent, 100, `<span class="loader"></span> Compressing… ${meta.percent.toFixed(0)}%`);
+      });
+      saveBlob(archive, `${currentProduct}_${blobs.length}tiles.zip`);
+    }
+
+    const notes = [`<span style="color:#22c55e">✓ Saved ${blobs.length} tile${blobs.length !== 1 ? 's' : ''}</span>`];
+    if (missing.length) notes.push(`<span style="color:#64748b">${missing.length} skipped (no data)</span>`);
+    if (failed.length)  notes.push(`<span style="color:#ef4444">${failed.length} failed</span>`);
+    setDlProgress(1, 1, notes.join(' · '));
+    notify(`Downloaded ${blobs.length} tile${blobs.length !== 1 ? 's' : ''}`, 'success');
+
+  } catch (err) {
+    if (err.name === 'AbortError') {
+      setDlProgress(0, 1, '<span style="color:#64748b">Cancelled</span>');
+      notify('Download cancelled', 'info');
+    } else {
+      setDlProgress(0, 1, `<span style="color:#ef4444">✗ ${err.message}</span>`);
+      notify('Download failed', 'error');
+    }
+  } finally {
+    _dlRunning = false;
+    _dlAbort   = null;
+    btn.innerHTML = DOWNLOAD_BTN_LABEL;
+  }
+}
+
+// ── Availability check (HEAD only — no payload) ──────────────
+async function checkAvailability() {
+  const tiles = Array.from(selectedTiles).sort();
+  const statusEl = document.getElementById('dl-check-status');
+  const btn = document.getElementById('btn-check');
+  btn.disabled = true;
+  statusEl.innerHTML = '<span class="loader"></span> Checking tile availability…';
+
+  const missing = [];
+  let checked = 0;
+  try {
+    await pool(tiles, async tile => {
+      const res = await fetch(tileURL(tile, currentProduct), { method: 'HEAD' });
+      if (!res.ok) missing.push(tile);
+      checked++;
+      statusEl.innerHTML = `<span class="loader"></span> Checked ${checked} / ${tiles.length}…`;
+    });
+    statusEl.innerHTML = missing.length
+      ? `<span style="color:#f59e0b">⚠ ${tiles.length - missing.length} available · ${missing.length} have no data (ocean / outside coverage): ${missing.slice(0, 12).join(', ')}${missing.length > 12 ? '…' : ''}</span>`
+      : `<span style="color:#22c55e">✓ All ${tiles.length} tiles are available for download</span>`;
+  } catch (err) {
+    statusEl.innerHTML = `<span style="color:#ef4444">✗ Check failed: ${err.message}</span>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+// SCRIPT GENERATORS
+// ════════════════════════════════════════════════════════════
+function _refreshScripts(tiles, urls) {
+  const date = new Date().toISOString().split('T')[0];
+  document.getElementById('wget-script').textContent = [
+    '#!/bin/bash',
+    `# SRTM DEM Download Script — Generated ${date}`,
+    `# Product: ${currentProduct}  |  Tiles: ${tiles.length}`,
+    '#',
+    '# Source: OpenTopography public S3 mirror — no account, no credentials needed.',
+    '# Tiles that are pure ocean return 404; -nv keeps the log readable.',
+    '',
+    'mkdir -p srtm_data && cd srtm_data',
+    '',
+    ...urls.map(u => `wget -nv -c "${u}"`),
+    '',
+    'echo "Done — $(ls -1 *.tif 2>/dev/null | wc -l) tiles in $(pwd)"',
+  ].join('\n');
+
+  document.getElementById('python-script').textContent = [
+    '#!/usr/bin/env python3',
+    `# SRTM DEM Downloader — Generated ${date}`,
+    `# Product: ${currentProduct}  |  Tiles: ${tiles.length}`,
+    '#',
+    '# Source: OpenTopography public S3 mirror — no authentication required.',
+    '# pip install requests',
+    '',
+    'import requests',
+    'from pathlib import Path',
+    '',
+    'URLS = [',
+    ...urls.map(u => `    "${u}",`),
+    ']',
+    '',
+    'out_dir = Path("srtm_data")',
+    'out_dir.mkdir(exist_ok=True)',
+    '',
+    'for url in URLS:',
+    '    dest = out_dir / url.split("/")[-1]',
+    '    if dest.exists():',
+    '        print(f"Skip {dest.name} (exists)")',
+    '        continue',
+    '    r = requests.get(url, stream=True, timeout=60)',
+    '    if r.status_code == 404:',
+    '        print(f"No data for {dest.stem} (ocean tile)")',
+    '        continue',
+    '    r.raise_for_status()',
+    '    with open(dest, "wb") as f:',
+    '        for chunk in r.iter_content(1 << 20):',
+    '            f.write(chunk)',
+    '    print(f"Saved {dest.name}")',
+    '',
+    'print("All done!")',
+    '',
+    '# Merge the tiles into a single GeoTIFF (needs GDAL):',
+    '#   gdal_merge.py -o srtm_merged.tif srtm_data/*.tif',
+  ].join('\n');
+}
+
+// ════════════════════════════════════════════════════════════
+// DOWNLOAD MODAL
+// ════════════════════════════════════════════════════════════
+function selectionBBox() {
+  if (!selectedTiles.size) return null;
+  let mnLa = Infinity, mxLa = -Infinity, mnLo = Infinity, mxLo = -Infinity;
+  selectedTiles.forEach(n => {
+    const { lat, lon } = parseTileName(n);
+    if (lat < mnLa) mnLa = lat; if (lat + 1 > mxLa) mxLa = lat + 1;
+    if (lon < mnLo) mnLo = lon; if (lon + 1 > mxLo) mxLo = lon + 1;
+  });
+  return { minLat: mnLa, maxLat: mxLa, minLon: mnLo, maxLon: mxLo };
+}
+
+function showDownloadModal() {
+  if (!selectedTiles.size) return;
+  const tiles   = Array.from(selectedTiles).sort();
+  const product = PRODUCTS[currentProduct];
+  const bb      = selectionBBox();
+  const urls    = tiles.map(t => tileURL(t, currentProduct));
+
+  document.getElementById('modal-subtitle').textContent =
+    `${tiles.length} tile${tiles.length !== 1 ? 's' : ''} · ${currentProduct} · ~${formatSize(tiles.length * product.sizeMB)}`;
+  document.getElementById('url-count-label').textContent =
+    `${tiles.length} tile${tiles.length !== 1 ? 's' : ''} · ~${formatSize(tiles.length * product.sizeMB)} estimated`;
+  document.getElementById('dl-check-status').innerHTML = '';
+  document.getElementById('url-list').textContent = urls.join('\n');
+  showDlProgress(false);
+
+  _refreshScripts(tiles, urls);
+
+  // OpenTopography API — one merged GeoTIFF for the whole selection bbox
+  const OTOPO_DEMTYPE = { SRTMGL1: 'SRTMGL1', NASADEM: 'NASADEM', ALOS: 'AW3D30', COP30: 'COP30', SRTMGL3: 'SRTMGL3', COP90: 'COP90' };
+  const demType = OTOPO_DEMTYPE[currentProduct];
+  const otopoBase = `https://portal.opentopography.org/API/globaldem?demtype=${demType}&south=${bb.minLat}&north=${bb.maxLat}&west=${bb.minLon}&east=${bb.maxLon}&outputFormat=GTiff&API_Key=YOUR_API_KEY`;
+  document.getElementById('otopo-script').textContent = [
+    '# OpenTopography Global DEM API — returns ONE merged GeoTIFF for your',
+    '# whole bounding box instead of individual 1°x1° tiles.',
+    '#',
+    '# Free API key (takes a minute): https://portal.opentopography.org/requestApiKey',
+    '# Area limit for the free tier is 450,000 km².',
+    '',
+    '# Your selection bounding box:',
+    `#   South=${bb.minLat}, North=${bb.maxLat}, West=${bb.minLon}, East=${bb.maxLon}`,
+    '',
+    '# API URL:',
+    otopoBase,
+    '',
+    '# Download with curl:',
+    `curl -L "${otopoBase}" -o srtm_${demType}_merged.tif`,
+    '',
+    '# Download with Python:',
+    'import requests',
+    `r = requests.get("${otopoBase}", timeout=300)`,
+    'r.raise_for_status()',
+    `open("srtm_${demType}_merged.tif", "wb").write(r.content)`,
+  ].join('\n');
+
+  document.getElementById('modal-overlay').classList.add('visible');
+  switchDlTab('urls');
+}
+
+function closeModal() {
+  _dlAbort?.abort();
+  document.getElementById('modal-overlay').classList.remove('visible');
+}
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+
+function switchDlTab(tab) {
+  activeDlTab = tab;
+  document.querySelectorAll('.dl-tab').forEach((el, i) => {
+    el.classList.toggle('active', ['urls','wget','python','otopo'][i] === tab);
+  });
+  ['urls','wget','python','otopo'].forEach(t => {
+    document.getElementById(`dl-panel-${t}`).style.display = t === tab ? '' : 'none';
+  });
+}
+
+function copyToClipboard() {
+  const panelId = { urls: 'url-list', wget: 'wget-script', python: 'python-script', otopo: 'otopo-script' }[activeDlTab];
+  // For url-list, strip the placeholder comment lines
+  let text = document.getElementById(panelId)?.textContent || '';
+  if (activeDlTab === 'urls') text = text.split('\n').filter(l => !l.startsWith('#')).join('\n').trim();
+  navigator.clipboard.writeText(text)
+    .then(() => notify('Copied to clipboard', 'success'))
+    .catch(() => notify('Copy failed', 'error'));
+}
+
+function downloadManifest() {
+  const tiles   = Array.from(selectedTiles).sort();
+  const product = PRODUCTS[currentProduct];
+  const urls    = tiles.map(t => tileURL(t, currentProduct));
+  const content = [
+    `# SRTM DEM Download Manifest`,
+    `# Generated   : ${new Date().toISOString()}`,
+    `# Product     : ${currentProduct}`,
+    `# Resolution  : ${PRODUCTS[currentProduct].res === '3arc' ? '3 arc-second (~90 m)' : '1 arc-second (~30 m)'}`,
+    `# Tiles       : ${tiles.length}`,
+    `# Est. size   : ~${formatSize(tiles.length * product.sizeMB)}`,
+    `# Source      : OpenTopography public mirror — no authentication required`,
+    `#`,
+    `# Download every tile with wget:`,
+    `#   wget -nv -c -i manifest.txt`,
+    `# Ocean-only tiles are absent from the archive and return 404 — that is expected.`,
+    ``,
+    ...urls
+  ].join('\n');
+  const blob = new Blob([content], { type: 'text/plain' });
+  const a = Object.assign(document.createElement('a'), {
+    href: URL.createObjectURL(blob),
+    download: `${currentProduct}_${tiles.length}tiles_manifest.txt`
+  });
+  a.click();
+  URL.revokeObjectURL(a.href);
+  notify(`Manifest downloaded (${tiles.length} URLs)`, 'success');
+}
+
+// ════════════════════════════════════════════════════════════
+// NOTIFICATION
+// ════════════════════════════════════════════════════════════
+let _ntTimer;
+function notify(msg, type = 'info') {
+  const el = document.getElementById('notification');
+  el.textContent = msg;
+  el.className = `visible ${type}`;
+  clearTimeout(_ntTimer);
+  _ntTimer = setTimeout(() => el.classList.remove('visible'), 2800);
+}
+
+// ════════════════════════════════════════════════════════════
+// KEYBOARD SHORTCUTS
+// ════════════════════════════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if (['INPUT','SELECT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+  if (e.key === 'c' || e.key === 'C') setTool('click');
+  if (e.key === 'r' || e.key === 'R') setTool('rect');
+  if (e.key === 'p' || e.key === 'P') setTool('polygon');
+  if (e.key === 'Escape') setTool('click');
+});
+
+// ════════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════════
+// Build the product dropdown from RES_PRODUCTS so it always reflects every
+// dataset for the default resolution (30 m). The static <option> list in the
+// HTML is only a placeholder — without this, the first load showed just SRTM
+// GL1 + NASADEM until you toggled resolution and forced setResolution() to run.
+setResolution('1arc');
+updateUI();
+
+// ════════════════════════════════════════════════════════════
+// LIGHT-TOUCH SOURCE DETERRENTS  (NOT real security)
+// ════════════════════════════════════════════════════════════
+// IMPORTANT: none of this actually protects the code. Anything the browser
+// runs, the visitor can read (View Source, the browser menu → DevTools,
+// "Save page as", the Network tab, or a curl of the file). These handlers only
+// slow down a casual copier. For genuine protection, minify/obfuscate the JS
+// at build time and move the parts you care about (the tile-URL scheme, the
+// land-mask, any API keys) behind a small server proxy — see README.
+(function () {
+  // Block the right-click context menu.
+  document.addEventListener('contextmenu', e => e.preventDefault());
+
+  // Swallow the usual DevTools / view-source keyboard shortcuts.
+  document.addEventListener('keydown', e => {
+    const k = e.key.toUpperCase();
+    if (
+      e.key === 'F12' ||                                   // DevTools
+      (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(k)) || // Inspect / console / picker
+      (e.ctrlKey && k === 'U') ||                          // View source
+      (e.ctrlKey && k === 'S')                             // Save page
+    ) {
+      e.preventDefault();
+    }
+  });
+})();
+</script>
+</body>
+</html>
