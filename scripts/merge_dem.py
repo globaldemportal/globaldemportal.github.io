@@ -38,10 +38,12 @@ def main():
     in_dir = sys.argv[1] if len(sys.argv) > 1 else "srtm_data"
     out_tif = sys.argv[2] if len(sys.argv) > 2 else "srtm_merged.tif"
 
-    tiles = sorted(glob.glob(os.path.join(in_dir, "*.tif")))
+    # *.hgt covers Mapzen/Tilezen tiles - gunzip the downloaded *.hgt.gz first,
+    # GDAL's HGT driver doesn't read the gzip wrapper transparently.
+    tiles = sorted(glob.glob(os.path.join(in_dir, "*.tif")) + glob.glob(os.path.join(in_dir, "*.hgt")))
     if not tiles:
-        sys.exit(f"No .tif tiles found in '{in_dir}'. "
-                 f"Download some first, or pass the folder as the first argument.")
+        sys.exit(f"No .tif or .hgt tiles found in '{in_dir}'. "
+                 f"Download some first (gunzip any *.hgt.gz), or pass the folder as the first argument.")
     print(f"Merging {len(tiles)} tiles from '{in_dir}' -> '{out_tif}'")
 
     have_vrt = shutil.which("gdalbuildvrt") and shutil.which("gdal_translate")

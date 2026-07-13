@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="author" content="Sharad Gupta" />
-  <meta name="description" content="Download free global DEM elevation data (SRTM, NASADEM, ALOS, Copernicus) as GeoTIFF. Built by Sharad Gupta." />
+  <meta name="description" content="Download free global DEM elevation data (SRTM, NASADEM, ALOS, Copernicus, Mapzen) as GeoTIFF. Built by Sharad Gupta." />
   <title>Global DEM Portal - SRTM · NASADEM · ALOS · Copernicus Downloader</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
@@ -478,6 +478,7 @@
       transition: background 0.15s, color 0.15s;
     }
     .dl-tab.active { background: #1e293b; color: #f1f5f9; }
+    .dl-tab.dl-tab-disabled { opacity: 0.35; cursor: not-allowed; }
 
     .info-box {
       background: rgba(59,130,246,0.08);
@@ -691,7 +692,7 @@
     <div class="sidebar-header-row">
       <h1>
         🗻 Global DEM Portal
-        <span class="version-badge">v1</span>
+        <span class="version-badge">v1.1</span>
       </h1>
       <button class="sidebar-close" onclick="closeSidebar()" aria-label="Close menu">×</button>
     </div>
@@ -721,6 +722,7 @@
     <div class="tab active" data-tab="tools">Tools</div>
     <div class="tab" data-tab="tiles">Tiles</div>
     <div class="tab" data-tab="info">Info</div>
+    <div class="tab" data-tab="whatsnew">What's New</div>
   </div>
 
   <!-- ── Tools Tab ─────────────────────────────── -->
@@ -828,31 +830,34 @@
   <div class="tab-content" id="tab-info">
     <div class="info-section">
       <h3>About</h3>
-      <p>Select 1°×1° tiles and download open global elevation data as GeoTIFF. Six free DEMs are available - pick one under <strong style="color:#f1f5f9">Dataset Options</strong>. Coverage differs by mission, so the red boundary lines on the map move when you switch products.</p>
+      <p>Select 1°×1° tiles and download open global elevation data. Seven free DEMs are available - pick one under <strong style="color:#f1f5f9">Dataset Options</strong>. Coverage differs by mission, so the red boundary lines on the map move when you switch products. Six products are GeoTIFF; Mapzen is raw gzip-compressed .hgt (see Data Access below).</p>
     </div>
     <div class="info-section">
       <h3>Datasets</h3>
       <table class="coverage-table">
         <thead><tr><th>Product</th><th>Res</th><th>Extent</th></tr></thead>
         <tbody>
-          <tr><td>SRTM GL1</td><td>~30 m</td><td>56°S – 60°N</td></tr>
-          <tr><td>NASADEM</td><td>~30 m</td><td>56°S – 60°N</td></tr>
-          <tr><td>ALOS AW3D30</td><td>~30 m</td><td>82°S – 82°N</td></tr>
+          <tr><td>SRTM GL1</td><td>~30 m</td><td>56°S - 60°N</td></tr>
+          <tr><td>NASADEM</td><td>~30 m</td><td>56°S - 60°N</td></tr>
+          <tr><td>ALOS AW3D30</td><td>~30 m</td><td>82°S - 82°N</td></tr>
           <tr><td>Copernicus GLO-30</td><td>~30 m</td><td>global</td></tr>
-          <tr><td>SRTM GL3</td><td>~90 m</td><td>56°S – 60°N</td></tr>
+          <tr><td>Mapzen (Tilezen)</td><td>~30 m</td><td>56°S - 60°N*</td></tr>
+          <tr><td>SRTM GL3</td><td>~90 m</td><td>56°S - 60°N</td></tr>
           <tr><td>Copernicus GLO-90</td><td>~90 m</td><td>global</td></tr>
         </tbody>
       </table>
+      <p style="margin-top:6px;font-size:10.5px;color:#64748b">*Mapzen's own data is truly global (it fills the poles and oceans with ETOPO1/GMTED), but this portal caps it to the SRTM band so it only ever offers tiles already on the land-mask grid above.</p>
     </div>
     <div class="info-section">
       <h3>Sources</h3>
       <p><strong style="color:#f1f5f9">SRTM / NASADEM</strong> - NASA/USGS radar (2000).<br>
-      <strong style="color:#f1f5f9">ALOS AW3D30</strong> - JAXA optical stereo (2006–2011).<br>
-      <strong style="color:#f1f5f9">Copernicus GLO-30/90</strong> - ESA's open DEM edited from Airbus <em>TanDEM-X</em> radar (2011–2015); the freely redistributable TanDEM-X-based global DEM.</p>
+      <strong style="color:#f1f5f9">ALOS AW3D30</strong> - JAXA optical stereo (2006-2011).<br>
+      <strong style="color:#f1f5f9">Copernicus GLO-30/90</strong> - ESA's open DEM edited from Airbus <em>TanDEM-X</em> radar (2011-2015); the freely redistributable TanDEM-X-based global DEM.<br>
+      <strong style="color:#f1f5f9">Mapzen (Tilezen)</strong> - SRTM-derived "skadi" tiles from the defunct Mapzen project, redistributed as a static AWS Open Data snapshot; not updated since 2016.</p>
     </div>
     <div class="info-section">
       <h3>Tile Naming Convention</h3>
-      <p>Tiles are named by their lower-left corner. <strong style="color:#f1f5f9">N37W122</strong> = lat 37–38°N, lon 122–121°W. Each tile covers exactly 1°×1°. Filenames on disk follow each dataset's own convention.</p>
+      <p>Tiles are named by their lower-left corner. <strong style="color:#f1f5f9">N37W122</strong> = lat 37-38°N, lon 122-121°W. Each tile covers exactly 1°×1°. Filenames on disk follow each dataset's own convention.</p>
     </div>
     <div class="info-section">
       <h3>Coverage Limits</h3>
@@ -861,10 +866,14 @@
     <div class="info-section">
       <h3>Data Access</h3>
       <p>
-        Tiles download straight from the <a href="https://opentopography.org" target="_blank">OpenTopography</a>
+        Six products download straight from the <a href="https://opentopography.org" target="_blank">OpenTopography</a>
         public mirror as GeoTIFF - no account, no login.<br>
+        <strong style="color:#f1f5f9">Mapzen</strong> instead comes from the
+        <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank">AWS Open Data terrain-tiles</a>
+        bucket as gzip-compressed SRTM <code>.hgt.gz</code> - gunzip it to get a standard <code>.hgt</code> raster
+        that GDAL/QGIS open natively; it is not a GeoTIFF.<br>
         NASA's own <a href="https://earthdata.nasa.gov" target="_blank">Earthdata</a> distribution serves the same
-        data but requires a login and blocks browser requests, so it cannot be used directly from a web page.
+        SRTM/NASADEM data but requires a login and blocks browser requests, so it cannot be used directly from a web page.
       </p>
     </div>
     <div class="info-section">
@@ -872,7 +881,9 @@
       <p>SRTM: NASA JPL (2013),
         <a href="https://doi.org/10.5067/MEaSUREs/SRTM/SRTMGL1.003" target="_blank">doi:10.5067/MEaSUREs/SRTM/SRTMGL1.003</a>.
         ALOS AW3D30: © JAXA. Copernicus DEM: © ESA / Airbus, produced from TanDEM-X.
-        All redistributed by <a href="https://opentopography.org" target="_blank">OpenTopography</a>.</p>
+        Mapzen (Tilezen): © Mapzen, © OpenStreetMap contributors (terrain tiles use SRTM data under the same terms).
+        Six products redistributed by <a href="https://opentopography.org" target="_blank">OpenTopography</a>;
+        Mapzen via the <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank">AWS Open Data Program</a>.</p>
     </div>
     <div class="info-section">
       <h3>Author &amp; Contact</h3>
@@ -883,6 +894,23 @@
         Email: <a href="mailto:sharadgupta27@gmail.com" onclick="return copyEmail()">sharadgupta27@gmail.com</a>
       </p>
       <p style="margin-top:6px">Inspired by <a href="https://chm.geocarpentry.org/" target="_blank" rel="noopener">geocarpentry.org</a>.</p>
+    </div>
+  </div>
+
+  <!-- ── What's New Tab ─────────────────────────── -->
+  <div class="tab-content" id="tab-whatsnew">
+    <div class="info-section">
+      <h3>v1.1 <span style="color:#64748b;font-weight:400">- 2026-07-13</span></h3>
+      <p>
+        Mapzen added as a new DEM product.
+      </p>
+    </div>
+    <div class="info-section">
+      <h3>v1 <span style="color:#64748b;font-weight:400">- Initial release</span></h3>
+      <p>
+        SRTM GL1/GL3, NASADEM, ALOS AW3D30 and Copernicus GLO-30/GLO-90 as GeoTIFF - map click/box/polygon
+        selection, ZIP/wget/Python downloads, country search, GeoJSON boundary upload, and tile selection.
+      </p>
     </div>
   </div>
 
@@ -948,7 +976,7 @@
       <button class="modal-close" onclick="closeModal()">×</button>
     </div>
     <div class="modal-body">
-      <div class="info-box">
+      <div class="info-box" id="dl-info-box">
         ✅ Tiles are served as <strong>GeoTIFF</strong> from the
         <a href="https://opentopography.org" target="_blank">OpenTopography</a> public mirror -
         no account, no login, direct download. Ocean-only tiles have no data and are skipped automatically.
@@ -958,7 +986,7 @@
         <div class="dl-tab active" onclick="switchDlTab('urls')">Direct Download</div>
         <div class="dl-tab" onclick="switchDlTab('wget')">wget Script</div>
         <div class="dl-tab" onclick="switchDlTab('python')">Python</div>
-        <div class="dl-tab" onclick="switchDlTab('otopo')">Merged GeoTIFF</div>
+        <div class="dl-tab" id="dl-tab-otopo" onclick="switchDlTab('otopo')">Merged GeoTIFF</div>
       </div>
 
       <div id="dl-panel-urls">
@@ -1026,6 +1054,10 @@ const SRTM = {
 // (NASA's own LP DAAC Cloud endpoint requires an Earthdata login and sends no CORS
 //  headers, so its URLs can neither be clicked nor fetched from a web page.)
 const OT_BASE = 'https://opentopography.s3.sdsc.edu/raster';
+// Mapzen/Tilezen "skadi" terrain tiles - a frozen (last updated 2016) AWS Open
+// Data snapshot, unrelated to the OpenTopography mirror above. Raw gzip-compressed
+// SRTM .hgt, not GeoTIFF. https://registry.opendata.aws/terrain-tiles/
+const MAPZEN_BASE = 'https://s3.amazonaws.com/elevation-tiles-prod/skadi';
 
 // Copernicus tiles encode lat as 2 digits, lon as 3, with `_00` sub-degree fields.
 function copName(res, tile) {
@@ -1046,7 +1078,7 @@ function alosName(tile) {
 
 // Each product: display label, resolution class, coverage band (latMin/latMax),
 // average per-tile size (MB, for the estimate), and its URL + saved-filename builders.
-// Coverage differs by mission - SRTM only reached 56°S–60°N, whereas Copernicus is
+// Coverage differs by mission - SRTM only reached 56°S-60°N, whereas Copernicus is
 // truly global and ALOS reaches ~82°.
 const PRODUCTS = {
   SRTMGL1: {
@@ -1082,12 +1114,20 @@ const PRODUCTS = {
     label: 'Copernicus GLO-90 - TanDEM-X (~90 m)', res: '3arc', latMin: -90, latMax: 90, sizeMB: 6,
     url:  t => `${OT_BASE}/COP90/COP90_hh/${copName('30', t)}`,
     file: t => copName('30', t)
+  },
+  // Restricted to the old SRTM band (56S-60N), same as SRTMGL1/NASADEM/SRTMGL3
+  // above, so it only ever offers tiles already drawn on the land-mask grid -
+  // it isn't extended to the poles/ocean cells the source data actually covers.
+  MAPZEN: {
+    label: 'Mapzen (Tilezen) - SRTM Skadi .hgt.gz (~30 m)', res: '1arc', latMin: -56, latMax: 60, sizeMB: 5,
+    url:  t => `${MAPZEN_BASE}/${t.slice(0, 3)}/${t}.hgt.gz`,
+    file: t => `${t}.hgt.gz`
   }
 };
 
 // Products offered under each resolution toggle, in menu order.
 const RES_PRODUCTS = {
-  '1arc': ['SRTMGL1', 'NASADEM', 'ALOS', 'COP30'],
+  '1arc': ['SRTMGL1', 'NASADEM', 'ALOS', 'COP30', 'MAPZEN'],
   '3arc': ['SRTMGL3', 'COP90']
 };
 
@@ -1881,20 +1921,40 @@ async function checkAvailability() {
 // SCRIPT GENERATORS
 // ════════════════════════════════════════════════════════════
 function _refreshScripts(tiles, urls) {
-  const date = new Date().toISOString().split('T')[0];
+  const date    = new Date().toISOString().split('T')[0];
+  const isMapzen = currentProduct === 'MAPZEN';
+  const glob    = isMapzen ? '*.hgt.gz' : '*.tif';
+  const sourceWget = isMapzen
+    ? '# Source: AWS Open Data terrain-tiles bucket (Mapzen/Tilezen skadi) - no account needed.'
+    : '# Source: OpenTopography public S3 mirror - no account, no credentials needed.';
+  const sourcePython = isMapzen
+    ? '# Source: AWS Open Data terrain-tiles bucket (Mapzen/Tilezen skadi) - no authentication required.'
+    : '# Source: OpenTopography public S3 mirror - no authentication required.';
+  const mergeHint = isMapzen
+    ? [
+        '# Files are gzip-compressed SRTM .hgt tiles (Mapzen/Tilezen skadi format).',
+        '# Merge with GDAL (gunzip first - GDAL\'s HGT driver does not read .gz):',
+        '#   gunzip srtm_data/*.hgt.gz',
+        '#   gdal_merge.py -o mapzen_merged.tif srtm_data/*.hgt',
+      ]
+    : [
+        '# Merge the tiles into a single GeoTIFF (needs GDAL):',
+        '#   gdal_merge.py -o srtm_merged.tif srtm_data/*.tif',
+      ];
+
   document.getElementById('wget-script').textContent = [
     '#!/bin/bash',
     `# SRTM DEM Download Script - Generated ${date}`,
     `# Product: ${currentProduct}  |  Tiles: ${tiles.length}`,
     '#',
-    '# Source: OpenTopography public S3 mirror - no account, no credentials needed.',
+    sourceWget,
     '# Tiles that are pure ocean return 404; -nv keeps the log readable.',
     '',
     'mkdir -p srtm_data && cd srtm_data',
     '',
     ...urls.map(u => `wget -nv -c "${u}"`),
     '',
-    'echo "Done - $(ls -1 *.tif 2>/dev/null | wc -l) tiles in $(pwd)"',
+    `echo "Done - $(ls -1 ${glob} 2>/dev/null | wc -l) tiles in $(pwd)"`,
   ].join('\n');
 
   document.getElementById('python-script').textContent = [
@@ -1902,7 +1962,7 @@ function _refreshScripts(tiles, urls) {
     `# SRTM DEM Downloader - Generated ${date}`,
     `# Product: ${currentProduct}  |  Tiles: ${tiles.length}`,
     '#',
-    '# Source: OpenTopography public S3 mirror - no authentication required.',
+    sourcePython,
     '# pip install requests',
     '',
     'import requests',
@@ -1932,8 +1992,7 @@ function _refreshScripts(tiles, urls) {
     '',
     'print("All done!")',
     '',
-    '# Merge the tiles into a single GeoTIFF (needs GDAL):',
-    '#   gdal_merge.py -o srtm_merged.tif srtm_data/*.tif',
+    ...mergeHint,
   ].join('\n');
 }
 
@@ -1966,34 +2025,57 @@ function showDownloadModal() {
   document.getElementById('url-list').textContent = urls.join('\n');
   showDlProgress(false);
 
+  document.getElementById('dl-info-box').innerHTML = currentProduct === 'MAPZEN'
+    ? `⚠️ Mapzen/Tilezen tiles are raw <strong>gzip-compressed SRTM .hgt</strong> (not GeoTIFF), served from the
+       <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank">AWS Open Data terrain-tiles</a>
+       bucket - a static snapshot last updated in 2016, unrelated to the OpenTopography mirror used for the other
+       products. gunzip each file to get a standard .hgt raster that GDAL/QGIS read natively. Ocean-only tiles have
+       no data and are skipped automatically.`
+    : `✅ Tiles are served as <strong>GeoTIFF</strong> from the
+       <a href="https://opentopography.org" target="_blank">OpenTopography</a> public mirror -
+       no account, no login, direct download. Ocean-only tiles have no data and are skipped automatically.`;
+
   _refreshScripts(tiles, urls);
 
-  // OpenTopography API - one merged GeoTIFF for the whole selection bbox
+  // OpenTopography API - one merged GeoTIFF for the whole selection bbox.
+  // Mapzen isn't hosted on OpenTopography, so it has no merged-mosaic option.
   const OTOPO_DEMTYPE = { SRTMGL1: 'SRTMGL1', NASADEM: 'NASADEM', ALOS: 'AW3D30', COP30: 'COP30', SRTMGL3: 'SRTMGL3', COP90: 'COP90' };
   const demType = OTOPO_DEMTYPE[currentProduct];
-  const otopoBase = `https://portal.opentopography.org/API/globaldem?demtype=${demType}&south=${bb.minLat}&north=${bb.maxLat}&west=${bb.minLon}&east=${bb.maxLon}&outputFormat=GTiff&API_Key=YOUR_API_KEY`;
-  document.getElementById('otopo-script').textContent = [
-    '# OpenTopography Global DEM API - returns ONE merged GeoTIFF for your',
-    '# whole bounding box instead of individual 1°x1° tiles.',
-    '#',
-    '# Free API key (takes a minute): https://portal.opentopography.org/requestApiKey',
-    '# Area limit for the free tier is 450,000 km².',
-    '',
-    '# Your selection bounding box:',
-    `#   South=${bb.minLat}, North=${bb.maxLat}, West=${bb.minLon}, East=${bb.maxLon}`,
-    '',
-    '# API URL:',
-    otopoBase,
-    '',
-    '# Download with curl:',
-    `curl -L "${otopoBase}" -o srtm_${demType}_merged.tif`,
-    '',
-    '# Download with Python:',
-    'import requests',
-    `r = requests.get("${otopoBase}", timeout=300)`,
-    'r.raise_for_status()',
-    `open("srtm_${demType}_merged.tif", "wb").write(r.content)`,
-  ].join('\n');
+  document.getElementById('dl-tab-otopo').classList.toggle('dl-tab-disabled', !demType);
+  if (demType) {
+    const otopoBase = `https://portal.opentopography.org/API/globaldem?demtype=${demType}&south=${bb.minLat}&north=${bb.maxLat}&west=${bb.minLon}&east=${bb.maxLon}&outputFormat=GTiff&API_Key=YOUR_API_KEY`;
+    document.getElementById('otopo-script').textContent = [
+      '# OpenTopography Global DEM API - returns ONE merged GeoTIFF for your',
+      '# whole bounding box instead of individual 1°x1° tiles.',
+      '#',
+      '# Free API key (takes a minute): https://portal.opentopography.org/requestApiKey',
+      '# Area limit for the free tier is 450,000 km².',
+      '',
+      '# Your selection bounding box:',
+      `#   South=${bb.minLat}, North=${bb.maxLat}, West=${bb.minLon}, East=${bb.maxLon}`,
+      '',
+      '# API URL:',
+      otopoBase,
+      '',
+      '# Download with curl:',
+      `curl -L "${otopoBase}" -o srtm_${demType}_merged.tif`,
+      '',
+      '# Download with Python:',
+      'import requests',
+      `r = requests.get("${otopoBase}", timeout=300)`,
+      'r.raise_for_status()',
+      `open("srtm_${demType}_merged.tif", "wb").write(r.content)`,
+    ].join('\n');
+  } else {
+    document.getElementById('otopo-script').textContent = [
+      '# Mapzen/Tilezen tiles are not hosted on OpenTopography, so there is no',
+      '# merged-mosaic API for this product. Download the individual tiles from',
+      '# the Direct Download / wget / Python tabs and mosaic them yourself:',
+      '#',
+      '#   gunzip *.hgt.gz',
+      '#   gdal_merge.py -o mapzen_merged.tif *.hgt',
+    ].join('\n');
+  }
 
   document.getElementById('modal-overlay').classList.add('visible');
   switchDlTab('urls');
@@ -2008,6 +2090,7 @@ document.getElementById('modal-overlay').addEventListener('click', e => {
 });
 
 function switchDlTab(tab) {
+  if (tab === 'otopo' && document.getElementById('dl-tab-otopo').classList.contains('dl-tab-disabled')) return;
   activeDlTab = tab;
   document.querySelectorAll('.dl-tab').forEach((el, i) => {
     el.classList.toggle('active', ['urls','wget','python','otopo'][i] === tab);

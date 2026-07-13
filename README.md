@@ -1,8 +1,8 @@
 # Global DEM Portal
 
-A single-page web app for selecting elevation tiles on a map and downloading them as
-GeoTIFF, across six free global DEMs. No build step, no backend, no API keys -
-`index.html` is the whole application.
+A single-page web app for selecting elevation tiles on a map and downloading them,
+across seven free global DEMs (six as GeoTIFF, one as raw gzip-compressed SRTM `.hgt`).
+No build step, no backend, no API keys - `index.html` is the whole application.
 
 By **Sharad Gupta** - [github.com/sharadgupta27](https://github.com/sharadgupta27) ·
 [linkedin.com/in/sharadgupta27](https://www.linkedin.com/in/sharadgupta27/) ·
@@ -40,6 +40,20 @@ selected product.
 | `COP30` Copernicus GLO-30 | ~30 m (TanDEM-X) | global | `raster/COP30/COP30_hh/Copernicus_DSM_10_{...}_DEM.tif` |
 | `SRTMGL3` | ~90 m | 56°S–60°N | `raster/SRTM_GL3/SRTM_GL3_srtm/{North_0_29\|North_30_60\|South}/{TILE}.tif` |
 | `COP90` Copernicus GLO-90 | ~90 m (TanDEM-X) | global | `raster/COP90/COP90_hh/Copernicus_DSM_30_{...}_DEM.tif` |
+| `MAPZEN` Mapzen (Tilezen) | ~30 m | 56°S–60°N* | `skadi/{TILE[0:3]}/{TILE}.hgt.gz` (different mirror, see below) |
+
+\* Capped to the SRTM band on purpose. Mapzen's underlying data is truly global -
+it fills oceans and poles with ETOPO1/GMTED - but this portal only exposes it where
+it overlaps the existing land-mask grid, so it doesn't need its own mask.
+
+**Mapzen is different from the other six** in two ways: it comes from a separate,
+unrelated mirror (the [AWS Open Data terrain-tiles bucket](https://registry.opendata.aws/terrain-tiles/),
+not OpenTopography), and it's served as gzip-compressed raw SRTM `.hgt`
+(the "[skadi](https://github.com/tilezen/joerd/blob/master/docs/formats.md)" format), not GeoTIFF - gunzip it to
+get a `.hgt` raster that GDAL/QGIS read natively. It's also a frozen snapshot: Mapzen
+the company shut down in 2018 and this bucket hasn't been updated since 2016, so treat
+it as a historical/bathymetry-capable curiosity rather than the best-quality option -
+Copernicus GLO-30 is the more current, more accurate choice for the same band.
 
 The **Copernicus GLO-30/GLO-90** products are ESA's openly redistributable global DEM,
 edited from Airbus **TanDEM-X** radar - they are the freely available "TanDEM-based" DEM.
@@ -84,7 +98,7 @@ composite), simplified; regenerate with `scripts/build_india_boundary.py`.
 
 ## Downloading
 
-* **One tile selected** - saves a single `.tif`.
+* **One tile selected** - saves a single `.tif` (or `.hgt.gz` for Mapzen).
 * **Several tiles** - fetches them (4 at a time), bundles them into a ZIP with
   [JSZip](https://stuk.github.io/jszip/) (loaded on demand), and saves that.
 * **Large selections** - the whole archive is assembled in browser memory, so above
@@ -92,7 +106,8 @@ composite), simplified; regenerate with `scripts/build_india_boundary.py`.
 * **Merged GeoTIFF** - the *Merged GeoTIFF* tab generates an
   [OpenTopography API](https://portal.opentopography.org/apidocs/) call that returns one
   mosaicked raster for the whole bounding box instead of separate tiles. That endpoint
-  needs a free API key.
+  needs a free API key, and isn't available for Mapzen (it isn't hosted on OpenTopography) -
+  the tab is greyed out when Mapzen is selected.
 
 To mosaic tiles yourself after downloading, use `scripts/merge_dem.py`. It's a thin
 wrapper around [GDAL](https://gdal.org) - GDAL itself isn't bundled here (it's a large
@@ -103,12 +118,13 @@ conda install -c conda-forge gdal      # easiest, cross-platform
 # or: sudo apt install gdal-bin (Debian/Ubuntu) · brew install gdal (macOS)
 # or: OSGeo4W (https://trac.osgeo.org/osgeo4w/) on Windows
 
-python scripts/merge_dem.py                       # srtm_data/*.tif -> srtm_merged.tif
+python scripts/merge_dem.py                       # srtm_data/*.tif(+*.hgt) -> srtm_merged.tif
 python scripts/merge_dem.py <input_dir> <output.tif>
 ```
 
 If you'd rather call GDAL directly: `gdal_merge.py -o srtm_merged.tif srtm_data/*.tif`
-works the same way once GDAL is on your PATH.
+works the same way once GDAL is on your PATH. For Mapzen, `gunzip` the downloaded
+`*.hgt.gz` files first - GDAL's HGT driver doesn't read the gzip wrapper transparently.
 
 ## Attribution
 
@@ -117,8 +133,12 @@ works the same way once GDAL is on your PATH.
 * **NASADEM** - NASA JPL (2020), NASADEM_HGT v001
 * **ALOS AW3D30** - © JAXA, ALOS World 3D-30m
 * **Copernicus GLO-30 / GLO-90** - © ESA / Airbus, produced from TanDEM-X
+* **Mapzen (Tilezen) terrain tiles** - © Mapzen, built from SRTM/GMTED/ETOPO1 and other
+  sources; redistributed as a static snapshot via the
+  [AWS Open Data Program](https://registry.opendata.aws/terrain-tiles/)
 
-All redistributed by OpenTopography. Basemaps © OpenStreetMap contributors, © CARTO.
+SRTM/NASADEM/ALOS/Copernicus redistributed by OpenTopography; Mapzen via AWS Open Data
+(a separate mirror). Basemaps © OpenStreetMap contributors, © CARTO.
 India boundary © [DataMeet Community Maps](https://github.com/datameet/maps); basemap
 boundary correction via [india_boundary_corrector](https://github.com/ramSeraph/india_boundary_corrector)
 (© ramSeraph, Unlicense; data OSM ODbL / Natural Earth).
